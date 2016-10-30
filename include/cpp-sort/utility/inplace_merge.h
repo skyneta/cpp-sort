@@ -50,6 +50,7 @@
 #include <iterator>
 #include <memory>
 #include <type_traits>
+#include <utility>
 #include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/functional.h>
 #include <cpp-sort/utility/iter_move.h>
@@ -74,11 +75,12 @@ namespace cppsort::utility
         {
             auto&& proj = utility::as_function(projection);
 
-            f0_0 = f0;
+            f0_0 = std::move(f0);
             n0_0 = n0 / 2;
             f0_1 = std::next(f0_0, n0_0);
-            f1_1 = cppsort::detail::lower_bound(f1, std::next(f1, n1), proj(*f0_1), compare, projection);
-            f1_0 = cppsort::detail::rotate(f0_1, f1, f1_1);
+            f1_1 = cppsort::detail::lower_bound(f1, std::next(f1, n1), proj(*f0_1),
+                                                std::move(compare), std::move(projection));
+            f1_0 = cppsort::detail::rotate(f0_1, std::move(f1), f1_1);
             n0_1 = std::distance(f0_1, f1_0);
             ++f1_0;
             n1_0 = n0 - n0_0 - 1;
@@ -100,9 +102,10 @@ namespace cppsort::utility
             f0_0 = f0;
             n0_1 = n1 / 2;
             f1_1 = std::next(f1, n0_1);
-            f0_1 = cppsort::detail::upper_bound(f0, std::next(f0, n0), proj(*f1_1), compare, projection);
+            f0_1 = cppsort::detail::upper_bound(f0, std::next(f0, n0), proj(*f1_1),
+                                                std::move(compare), std::move(projection));
             ++f1_1;
-            f1_0 = cppsort::detail::rotate(f0_1, f1, f1_1);
+            f1_0 = cppsort::detail::rotate(f0_1, std::move(f1), f1_1);
             n0_0 = std::distance(f0_0, f0_1);
             n1_0 = n0 - n0_0;
             n1_1 = n1 - n0_1 - 1;
@@ -139,7 +142,7 @@ namespace cppsort::utility
 
                 cppsort::detail::half_inplace_merge(
                     buffer, buff_it, f1, std::next(f1, n1), f0,
-                    compare, projection
+                    n0, compare, projection
                 );
                 return;
             }
@@ -150,7 +153,7 @@ namespace cppsort::utility
             if (n0 < n1)
             {
                 merge_n_step_0(
-                    f0, n0, f1, n1,
+                    std::move(f0), n0, std::move(f1), n1,
                     compare, projection,
                     f0_0, n0_0, f0_1, n0_1,
                     f1_0, n1_0, f1_1, n1_1
@@ -159,7 +162,7 @@ namespace cppsort::utility
             else
             {
                 merge_n_step_1(
-                    f0, n0, f1, n1,
+                    std::move(f0), n0, std::move(f1), n1,
                     compare, projection,
                     f0_0, n0_0, f0_1, n0_1,
                     f1_0, n1_0, f1_1, n1_1
@@ -170,7 +173,7 @@ namespace cppsort::utility
                                compare, projection);
             merge_n_adaptative(f1_0, n1_0, f1_1, n1_1,
                                buffer, buff_size,
-                               compare, projection);
+                               std::move(compare), std::move(projection));
         }
 
         template<typename ForwardIterator, typename Compare, typename Projection>
@@ -192,8 +195,6 @@ namespace cppsort::utility
 
             auto n0 = std::distance(first, middle);
             auto n1 = std::distance(middle, last);
-            ForwardIterator f0 = first;
-            ForwardIterator f1 = middle;
 
             auto buffer = std::get_temporary_buffer<rvalue_reference>(std::max(n0, n1));
             std::unique_ptr<
@@ -201,9 +202,9 @@ namespace cppsort::utility
                 cppsort::detail::temporary_buffer_deleter
             > ptr(buffer.first);
 
-            merge_n_adaptative(f0, n0, f1, n1,
+            merge_n_adaptative(std::move(first), n0, std::move(middle), n1,
                                buffer.first, buffer.second,
-                               compare, projection);
+                               std::move(compare), std::move(projection));
         }
 
         template<typename BidirectionalIterator, typename Compare, typename Projection>
@@ -212,7 +213,8 @@ namespace cppsort::utility
                            std::bidirectional_iterator_tag)
             -> void
         {
-            cppsort::detail::inplace_merge(first, middle, last, compare, projection);
+            cppsort::detail::inplace_merge(std::move(first), std::move(middle), std::move(last),
+                                           std::move(compare), std::move(projection));
         }
     }
 
@@ -226,7 +228,8 @@ namespace cppsort::utility
         -> void
     {
         using category = cppsort::detail::iterator_category_t<ForwardIterator>;
-        detail::inplace_merge(first, middle, last, compare, projection, category{});
+        detail::inplace_merge(std::move(first), std::move(middle), std::move(last),
+                              std::move(compare), std::move(projection), category{});
     }
 }
 

@@ -27,6 +27,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#include <utility>
 #include "heap_operations.h"
 
 namespace cppsort::detail
@@ -37,7 +38,8 @@ namespace cppsort::detail
         -> void
     {
         make_heap(first, last, compare, projection);
-        sort_heap(first, last, compare, projection);
+        sort_heap(std::move(first), std::move(last),
+                  std::move(compare), std::move(projection));
     }
 }
 

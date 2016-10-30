@@ -56,7 +56,8 @@ namespace cppsort::detail
 
         if (size < 14)
         {
-            bubble_sort(first, size, compare, projection);
+            bubble_sort(std::move(first), size,
+                        std::move(compare), std::move(projection));
             return std::move(buffer);
         }
 
@@ -100,7 +101,7 @@ namespace cppsort::detail
         // Merge the sorted partitions in-place
         utility::detail::merge_n_adaptative(first, size_left, middle, size - (size / 2),
                                             buffer.get(), buff_size,
-                                            compare, projection);
+                                            std::move(compare), std::move(projection));
 
         return std::move(buffer);
     }
@@ -117,7 +118,8 @@ namespace cppsort::detail
 
         if (size < 40)
         {
-            insertion_sort(first, last, compare, projection);
+            insertion_sort(std::move(first), std::move(last),
+                           std::move(compare), std::move(projection));
             return std::move(buffer);
         }
 
@@ -160,8 +162,8 @@ namespace cppsort::detail
 
         // Merge the sorted partitions in-place
         using comp_ref = std::add_lvalue_reference_t<Compare>;
-        inplace_merge_impl<comp_ref>(first, middle, last,
-                                     compare, projection,
+        inplace_merge_impl<comp_ref>(std::move(first), std::move(middle), std::move(last),
+                                     compare, std::move(projection),
                                      size_left, size - (size / 2),
                                      buffer.get(), buff_size);
 
@@ -177,15 +179,16 @@ namespace cppsort::detail
     {
         if (size < 14)
         {
-            bubble_sort(first, size, compare, projection);
+            bubble_sort(std::move(first), size,
+                        std::move(compare), std::move(projection));
             return;
         }
 
         buffer_ptr<rvalue_reference_t<ForwardIterator>> buffer(nullptr);
         std::ptrdiff_t buffer_size = 0;
-        merge_sort_impl(first, size,
+        merge_sort_impl(std::move(first), size,
                         std::move(buffer), buffer_size,
-                        compare, projection);
+                        std::move(compare), std::move(projection));
     }
 
     template<typename BidirectionalIterator, typename Compare, typename Projection>
@@ -197,15 +200,16 @@ namespace cppsort::detail
     {
         if (size < 40)
         {
-            insertion_sort(first, last, compare, projection);
+            insertion_sort(std::move(first), std::move(last),
+                           std::move(compare), std::move(projection));
             return;
         }
 
         buffer_ptr<rvalue_reference_t<BidirectionalIterator>> buffer(nullptr);
         std::ptrdiff_t buffer_size = 0;
-        merge_sort_impl(first, last, size,
+        merge_sort_impl(std::move(first), std::move(last), size,
                         std::move(buffer), buffer_size,
-                        compare, projection);
+                        std::move(compare), std::move(projection));
     }
 
     template<typename ForwardIterator, typename Compare, typename Projection>
@@ -215,7 +219,9 @@ namespace cppsort::detail
         -> void
     {
         using category = iterator_category_t<ForwardIterator>;
-        merge_sort(first, last, size, compare, projection, category{});
+        merge_sort(std::move(first), std::move(last), size,
+                   std::move(compare), std::move(projection),
+                   category{});
     }
 }
 

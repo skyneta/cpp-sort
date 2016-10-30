@@ -28,6 +28,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <iterator>
+#include <utility>
 #include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/bitops.h>
 #include "inplace_merge.h"
@@ -52,12 +53,14 @@ namespace cppsort::detail
         if (std::distance(first, middle1) < std::distance(middle2, last))
         {
             detail::inplace_merge(first, middle1, middle2, compare, projection);
-            detail::inplace_merge(first, middle2, last, compare, projection);
+            detail::inplace_merge(first, middle2, last,
+                                  std::move(compare), std::move(projection));
         }
         else
         {
             detail::inplace_merge(middle1, middle2, last, compare, projection);
-            detail::inplace_merge(first, middle1, last, compare, projection);
+            detail::inplace_merge(first, middle1, last,
+                                  std::move(compare), std::move(projection));
         }
     }
 
@@ -73,7 +76,8 @@ namespace cppsort::detail
         if (dist < 80)
         {
             // vergesort is inefficient for small collections
-            quicksort(first, last, dist, compare, projection);
+            quicksort(std::move(first), std::move(last), dist,
+                      std::move(compare), std::move(projection));
             return;
         }
 
@@ -177,7 +181,8 @@ namespace cppsort::detail
         if (begin_unstable != last)
         {
             quicksort(begin_unstable, last, size_unstable, compare, projection);
-            detail::inplace_merge(first, begin_unstable, last, compare, projection);
+            detail::inplace_merge(first, begin_unstable, last,
+                                  std::move(compare), std::move(projection));
         }
     }
 
@@ -193,7 +198,8 @@ namespace cppsort::detail
         if (dist < 80)
         {
             // vergesort is inefficient for small collections
-            pdqsort(first, last, compare, projection);
+            pdqsort(std::move(first), std::move(last),
+                    std::move(compare), std::move(projection));
             return;
         }
 
@@ -306,7 +312,8 @@ namespace cppsort::detail
             // If there are unsorted elements left,
             // sort them and merge everything
             pdqsort(begin_unstable, last, compare, projection);
-            detail::inplace_merge(first, begin_unstable, last, compare, projection);
+            detail::inplace_merge(first, begin_unstable, last,
+                                  std::move(compare), std::move(projection));
         }
     }
 
@@ -316,7 +323,9 @@ namespace cppsort::detail
         -> void
     {
         using category = iterator_category_t<BidirectionalIterator>;
-        vergesort(first, last, compare, projection, category{});
+        vergesort(std::move(first), std::move(last),
+                  std::move(compare), std::move(projection),
+                  category{});
     }
 }
 

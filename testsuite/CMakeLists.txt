@@ -26,6 +26,14 @@ set(
 )
 
 set(
+    COMPARATORS_TESTS
+
+    comparators/case_insensitive_less.cpp
+    comparators/natural_less.cpp
+    comparators/total_less.cpp
+)
+
+set(
     PROBES_TESTS
 
     probes/dis.cpp
@@ -35,6 +43,7 @@ set(
     probes/inv.cpp
     probes/max.cpp
     probes/osc.cpp
+    probes/par.cpp
     probes/rem.cpp
     probes/runs.cpp
     probes/relations.cpp
@@ -53,11 +62,14 @@ set(
     sorters/spread_sorter.cpp
     sorters/spread_sorter_defaults.cpp
     sorters/spread_sorter_projection.cpp
+    sorters/std_sorter.cpp
 )
 
 set(
     UTILITY_TESTS
 
+    utility/as_projection.cpp
+    utility/as_projection_iterable.cpp
     utility/buffer.cpp
     utility/iter_swap.cpp
 )
@@ -77,6 +89,7 @@ add_executable(
     sorter_facade_defaults.cpp
     sorter_facade_iterable.cpp
     ${ADAPTERS_TESTS}
+    ${COMPARATORS_TESTS}
     ${PROBES_TESTS}
     ${SORTERS_TESTS}
     ${UTILITY_TESTS}

@@ -314,7 +314,7 @@ namespace cppsort::detail
                 lrest += lblock * nblock2;
             }
             grail_MergeLeftWithXBuf(prest, prest+lrest, prest+lrest+llast,
-                                    prest-lblock, compare, projection);
+                                    prest-lblock, std::move(compare), std::move(projection));
         } else {
             detail::move(prest, prest + lrest, prest - lblock);
         }
@@ -439,9 +439,11 @@ namespace cppsort::detail
         if (nblock == 0) {
             RandomAccessIterator l = arr + nblock2 * lblock;
             if (havebuf) {
-                grail_MergeLeft(arr, l, l+llast, arr-lblock, compare, projection);
+                grail_MergeLeft(arr, l, l+llast, arr-lblock,
+                                std::move(compare), std::move(projection));
             } else {
-                grail_MergeWithoutBuffer(arr, l, l+llast, compare, projection);
+                grail_MergeWithoutBuffer(arr, l, l+llast,
+                                         std::move(compare), std::move(projection));
             }
             return;
         }
@@ -484,10 +486,11 @@ namespace cppsort::detail
                 lrest += lblock * nblock2;
             }
             if (havebuf) {
-                grail_MergeLeft(prest, prest+lrest, prest+lrest+llast,
-                                prest-lblock, compare, projection);
+                grail_MergeLeft(prest, prest+lrest, prest+lrest+llast, prest-lblock,
+                                std::move(compare), std::move(projection));
             } else {
-                grail_MergeWithoutBuffer(prest, prest+lrest, prest+lrest+llast, compare, projection);
+                grail_MergeWithoutBuffer(prest, prest+lrest, prest+lrest+llast,
+                                         std::move(compare), std::move(projection));
             }
         } else {
             if (havebuf) {
@@ -664,7 +667,8 @@ namespace cppsort::detail
                                 compare, projection);
         }
         insertion_sort(first, ptr, compare.base(), projection);
-        grail_MergeWithoutBuffer(first, ptr, last, compare, projection);
+        grail_MergeWithoutBuffer(first, ptr, last,
+                                 std::move(compare), std::move(projection));
     }
 
     template<typename BufferProvider, typename RandomAccessIterator,
@@ -679,8 +683,8 @@ namespace cppsort::detail
         auto size = std::distance(first, last);
         typename BufferProvider::template buffer<rvalue_reference> buffer(size);
 
-        grail_commonSort(first, last, buffer.begin(), buffer.size(),
-                         three_way_compare<Compare>(compare), projection);
+        grail_commonSort(std::move(first), std::move(last), buffer.begin(), buffer.size(),
+                         three_way_compare<Compare>(compare), std::move(projection));
     }
 }
 

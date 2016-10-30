@@ -28,6 +28,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <cstddef>
+#include <utility>
 
 namespace cppsort::detail
 {
@@ -52,7 +53,7 @@ namespace cppsort::detail
     auto front_insert(RandomAccessIterator first, Compare compare, Projection projection)
         -> decltype(auto)
     {
-        return front_inserter_n<N>{}(first, compare, projection);
+        return front_inserter_n<N>{}(std::move(first), std::move(compare), std::move(projection));
     }
 }
 

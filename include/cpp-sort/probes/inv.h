@@ -32,6 +32,7 @@
 #include <memory>
 #include <new>
 #include <type_traits>
+#include <utility>
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
@@ -84,7 +85,8 @@ namespace cppsort::probe
 
                     return cppsort::detail::count_inversions<difference_type>(
                         iterators.get(), iterators.get() + size, buffer.get(),
-                        cppsort::detail::indirect_compare<Compare, Projection>(compare, projection)
+                        cppsort::detail::indirect_compare<Compare, Projection>(std::move(compare),
+                                                                               std::move(projection))
                     );
                 }
                 else
@@ -94,7 +96,8 @@ namespace cppsort::probe
                     // allocated
 
                     return cppsort::detail::count_inversions_quadratic(
-                        first, last, compare, projection
+                        std::move(first), std::move(last),
+                        std::move(compare), std::move(projection)
                     );
                 }
             }

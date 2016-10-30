@@ -52,7 +52,7 @@ namespace cppsort
     auto sort(Iterable&& iterable, Compare compare)
         -> void
     {
-        default_sorter{}(std::forward<Iterable>(iterable), compare);
+        default_sorter{}(std::forward<Iterable>(iterable), std::move(compare));
     }
 
     template<
@@ -62,31 +62,33 @@ namespace cppsort
         typename = std::enable_if_t<
             not is_comparison_sorter_v<Iterable, Compare, Projection> &&
             not is_projection_sorter_v<Iterable, Compare, Projection> &&
-            not is_sorter_iterator_v<Iterable, Compare>
+            not is_sorter_iterator_v<Iterable, Compare> &&
+            is_projection_v<Projection, Iterable, Compare>
         >
     >
     auto sort(Iterable&& iterable, Compare compare, Projection projection)
         -> void
     {
-        default_sorter{}(std::forward<Iterable>(iterable), compare, projection);
+        default_sorter{}(std::forward<Iterable>(iterable),
+                         std::move(compare), std::move(projection));
     }
 
     template<typename Iterator>
     auto sort(Iterator first, Iterator last)
         -> void
     {
-        default_sorter{}(first, last);
+        default_sorter{}(std::move(first), std::move(last));
     }
 
     template<
         typename Iterator,
-        typename Compare,
-        typename = std::enable_if_t<not is_sorter_iterator_v<Iterator, Compare>>
+        typename Func,
+        typename = std::enable_if_t<not is_sorter_iterator_v<Iterator, Func>>
     >
-    auto sort(Iterator first, Iterator last, Compare compare)
+    auto sort(Iterator first, Iterator last, Func func)
         -> void
     {
-        default_sorter{}(first, last, compare);
+        default_sorter{}(std::move(first), std::move(last), std::move(func));
     }
 
     template<
@@ -101,7 +103,8 @@ namespace cppsort
     auto sort(Iterator first, Iterator last, Compare compare, Projection projection)
         -> void
     {
-        return default_sorter{}(first, last, compare, projection);
+        return default_sorter{}(std::move(first), std::move(last),
+                                std::move(compare), std::move(projection));
     }
 
     ////////////////////////////////////////////////////////////
@@ -130,7 +133,7 @@ namespace cppsort
     auto sort(const Sorter& sorter, Iterable&& iterable, Func func)
         -> decltype(auto)
     {
-        return sorter(std::forward<Iterable>(iterable), func);
+        return sorter(std::forward<Iterable>(iterable), std::move(func));
     }
 
     template<
@@ -143,7 +146,8 @@ namespace cppsort
               Compare compare, Projection projection)
         -> decltype(auto)
     {
-        return sorter(std::forward<Iterable>(iterable), compare, projection);
+        return sorter(std::forward<Iterable>(iterable),
+                      std::move(compare), std::move(projection));
     }
 
     template<
@@ -154,7 +158,7 @@ namespace cppsort
     auto sort(const Sorter& sorter, Iterator first, Iterator last)
         -> decltype(auto)
     {
-        return sorter(first, last);
+        return sorter(std::move(first), std::move(last));
     }
 
     template<
@@ -169,7 +173,7 @@ namespace cppsort
     auto sort(const Sorter& sorter, Iterator first, Iterator last, Func func)
         -> decltype(auto)
     {
-        return sorter(first, last, func);
+        return sorter(std::move(first), std::move(last), std::move(func));
     }
 
     template<
@@ -182,7 +186,8 @@ namespace cppsort
               Compare compare, Projection projection)
         -> decltype(auto)
     {
-        return sorter(first, last, compare, projection);
+        return sorter(std::move(first), std::move(last),
+                      std::move(compare), std::move(projection));
     }
 }
 

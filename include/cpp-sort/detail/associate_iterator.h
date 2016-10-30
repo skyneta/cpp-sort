@@ -179,7 +179,7 @@ namespace cppsort::detail
             associate_iterator() = default;
 
             explicit associate_iterator(Iterator it):
-                _it(it)
+                _it(std::move(it))
             {}
 
             ////////////////////////////////////////////////////////////
@@ -386,7 +386,7 @@ namespace cppsort::detail
     auto make_associate_iterator(Iterator it)
         -> associate_iterator<Iterator>
     {
-        return associate_iterator<Iterator>(it);
+        return associate_iterator<Iterator>(std::move(it));
     }
 }
 

@@ -51,7 +51,8 @@ namespace cppsort::detail
     {
         if (size < 10)
         {
-            bubble_sort(first, size, compare, projection);
+            bubble_sort(std::move(first), size,
+                        std::move(compare), std::move(projection));
             return true;
         }
         return false;
@@ -66,7 +67,8 @@ namespace cppsort::detail
     {
         if (size < 42)
         {
-            insertion_sort(first, last, compare, projection);
+            insertion_sort(std::move(first), std::move(last),
+                           std::move(compare), std::move(projection));
             return true;
         }
         return false;
@@ -135,7 +137,8 @@ namespace cppsort::detail
             std::swap(size_left, size_right);
         }
         quicksort(first, middle1, size_left, compare, projection);
-        quicksort(middle2, last, size_right, compare, projection);
+        quicksort(middle2, last, size_right,
+                  std::move(compare), std::move(projection));
     }
 }
 

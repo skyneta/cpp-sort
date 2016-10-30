@@ -29,6 +29,7 @@
 ////////////////////////////////////////////////////////////
 #include <functional>
 #include <type_traits>
+#include <utility>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
 #include <cpp-sort/utility/iter_move.h>
@@ -58,7 +59,7 @@ namespace cppsort::detail
             {
                 iter_swap(min, first);
             }
-            low_moves_sorter<3u>{}(first+1u, last, compare, projection);
+            low_moves_sorter<3u>{}(first+1u, last, std::move(compare), std::move(projection));
         }
     };
 }
