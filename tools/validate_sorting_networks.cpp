@@ -56,12 +56,14 @@ auto validate_sorting_network()
             cppsort::sort(sorter, to_sort);
 
             // Check whether it is sorted
-            if (not std::is_sorted(std::begin(to_sort), std::end(to_sort)))
-            {
+            if (not std::is_sorted(std::begin(to_sort), std::end(to_sort))) {
                 // Log the faulty array
                 std::cout << "\n  failed to sort the following input:\n  ";
-                for (const auto& value: collection)
-                {
+                for (const auto& value: collection) {
+                    std::cout << value << ' ';
+                }
+                std::cout << "\n  got the following output:\n  ";
+                for (const auto& value: to_sort) {
                     std::cout << value << ' ';
                 }
                 std::cout << '\n';
