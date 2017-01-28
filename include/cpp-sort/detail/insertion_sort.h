@@ -2,7 +2,7 @@
     pdqsort.h - Pattern-defeating quicksort.
 
     Copyright (c) 2015 Orson Peters
-    Modified in 2015-2016 by Morwenn for inclusion into cpp-sort
+    Modified in 2015-2017 by Morwenn for inclusion into cpp-sort
 
     This software is provided 'as-is', without any express or implied warranty. In no event will the
     authors be held liable for any damages arising from the use of this software.
@@ -51,10 +51,10 @@ namespace cppsort::detail
             if (compare(proj(*sift), proj(*sift_1))) {
                 auto tmp = iter_move(sift);
                 auto&& tmp_proj = proj(tmp);
+
                 do {
-                    *sift-- = iter_move(sift_1);
-                }
-                while (sift != first && compare(tmp_proj, proj(*--sift_1)));
+                    *sift = iter_move(sift_1);
+                } while (--sift != first && compare(tmp_proj, proj(*--sift_1)));
                 *sift = std::move(tmp);
             }
         }

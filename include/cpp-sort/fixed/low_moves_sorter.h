@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <iterator>
@@ -67,33 +66,27 @@ namespace cppsort
             {
                 using utility::iter_swap;
 
+                // There are specializations for N < 5, so unchecked_minmax_element
+                // will always be passed at least 2 elements
                 RandomAccessIterator min, max;
-                std::tie(min, max) = minmax_element(first, last--, compare, projection);
+                std::tie(min, max) = unchecked_minmax_element(first, last, compare, projection);
+                --last;
 
-                if (max == first && min == last)
-                {
+                if (max == first && min == last) {
                     if (min == max) return;
                     iter_swap(min, max);
-                }
-                else if (max == first)
-                {
-                    if (last != max)
-                    {
+                } else if (max == first) {
+                    if (last != max) {
                         iter_swap(last, max);
                     }
-                    if (first != min)
-                    {
+                    if (first != min) {
                         iter_swap(first, min);
                     }
-                }
-                else
-                {
-                    if (first != min)
-                    {
+                } else {
+                    if (first != min) {
                         iter_swap(first, min);
                     }
-                    if (last != max)
-                    {
+                    if (last != max) {
                         iter_swap(last, max);
                     }
                 }

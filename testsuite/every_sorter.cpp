@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,14 @@
  * THE SOFTWARE.
  */
 #include <algorithm>
-#include <ctime>
 #include <iterator>
-#include <numeric>
-#include <random>
 #include <vector>
 #include <catch.hpp>
 #include <cpp-sort/sort.h>
 #include <cpp-sort/sorters.h>
 #include <cpp-sort/utility/buffer.h>
 #include <cpp-sort/utility/functional.h>
+#include "distributions.h"
 
 TEST_CASE( "test every sorter", "[sorters]" )
 {
@@ -40,10 +38,9 @@ TEST_CASE( "test every sorter", "[sorters]" )
     // already tested in-depth somewhere else and needs specific
     // tests, so it's not included here.
 
-    std::vector<int> collection(491);
-    std::iota(std::begin(collection), std::end(collection), -125);
-    std::mt19937 engine(std::time(nullptr));
-    std::shuffle(std::begin(collection), std::end(collection), engine);
+    std::vector<int> collection; collection.reserve(491);
+    auto distribution = dist::shuffled{};
+    distribution(std::back_inserter(collection), 491, -125);
 
     SECTION( "block_sorter" )
     {
@@ -67,6 +64,12 @@ TEST_CASE( "test every sorter", "[sorters]" )
     SECTION( "default_sorter" )
     {
         cppsort::sort(cppsort::default_sorter{}, collection);
+        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
+    }
+
+    SECTION( "drop_merge_sorter" )
+    {
+        cppsort::sort(cppsort::drop_merge_sorter{}, collection);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 
@@ -128,6 +131,12 @@ TEST_CASE( "test every sorter", "[sorters]" )
     SECTION( "selection_sorter" )
     {
         cppsort::sort(cppsort::selection_sorter{}, collection);
+        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
+    }
+
+    SECTION( "ska_sorter" )
+    {
+        cppsort::sort(cppsort::ska_sorter{}, collection);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 
