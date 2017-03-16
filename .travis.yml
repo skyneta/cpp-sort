@@ -14,10 +14,10 @@ addons:
   apt:
     sources:
       - george-edison55-precise-backports
-      - llvm-toolchain-precise-3.8
+      - llvm-toolchain-precise-3.9
       - ubuntu-toolchain-r-test
     packages:
-      - clang-3.8
+      - clang-3.9
       - cmake
       - cmake-data
       - g++-6
@@ -25,7 +25,7 @@ addons:
 
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-6"; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.9"; fi
 
 script: 
   - cmake -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DSANITIZE="${SANITIZE}" .
