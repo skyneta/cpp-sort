@@ -961,7 +961,7 @@ namespace cppsort::detail
     using has_indexing_operator_t
         = std::decay_t<decltype(std::declval<T&>()[0])>;
 
-    template<template<typename...> class Op, typename... Args>
+    template<template<typename...> typename Op, typename... Args>
     using is_index_ska_sortable = is_ska_sortable<utility::detected_t<Op, Args...>>;
 
     // A bit hackish, but I'm bad at workarounds...
