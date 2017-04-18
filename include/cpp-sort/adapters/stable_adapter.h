@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@
 #include <utility>
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
+#include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/functional.h>
 #include "../detail/associate_iterator.h"
 #include "../detail/checkers.h"
@@ -57,16 +58,17 @@ namespace cppsort
             private:
 
                 using projection_t = decltype(utility::as_function(std::declval<Projection&>()));
-                std::tuple<Compare, projection_t> data;
+                using compare_t = decltype(utility::as_function(std::declval<Compare&>()));
+                std::tuple<compare_t, projection_t> data;
 
             public:
 
                 stable_compare(Compare compare, Projection projection={}):
-                    data(std::move(compare), utility::as_function(projection))
+                    data(utility::as_function(compare), utility::as_function(projection))
                 {}
 
                 auto compare() const
-                    -> Compare
+                    -> compare_t
                 {
                     return std::get<0>(data);
                 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,10 @@
 #include <iterator>
 #include <list>
 #include <type_traits>
+#include <utility>
 #include <cpp-sort/fwd.h>
 #include <cpp-sort/sorter_traits.h>
+#include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/functional.h>
 #include "../min_element.h"
 
@@ -67,6 +69,7 @@ namespace cppsort
                                   Compare compare, Projection projection)
             -> void
         {
+            auto&& comp = utility::as_function(compare);
             auto&& proj = utility::as_function(projection);
 
             auto first = collection.before_begin();
@@ -77,7 +80,7 @@ namespace cppsort
                 auto it = first;
                 while (std::next(it) != last)
                 {
-                    if (compare(proj(*std::next(it)), proj(*std::next(min_it))))
+                    if (comp(proj(*std::next(it)), proj(*std::next(min_it))))
                     {
                         min_it = it;
                     }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <cmath>
+#include <type_traits>
 #include <utility>
-#include <cpp-sort/utility/static_const.h>
+#include <cpp-sort/utility/branchless_traits.h>
 
 namespace cppsort::utility
 {
@@ -47,6 +48,11 @@ namespace cppsort::utility
 
         using is_transparent = void;
     };
+
+    template<typename T>
+    struct is_probably_branchless_projection<identity, T>:
+        std::true_type
+    {};
 
     ////////////////////////////////////////////////////////////
     // Transform overload in unary or binary function

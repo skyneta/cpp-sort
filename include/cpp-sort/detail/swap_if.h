@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,10 +45,10 @@ namespace cppsort::detail
     auto swap_if(T& lhs, T& rhs, Compare compare, Projection projection)
         -> void
     {
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
 
-        if (compare(proj(rhs), proj(lhs)))
-        {
+        if (comp(proj(rhs), proj(lhs))) {
             using std::swap;
             swap(lhs, rhs);
         }
@@ -100,10 +100,10 @@ namespace cppsort::detail
     auto iter_swap_if(Iterator lhs, Iterator rhs, Compare compare, Projection projection)
         -> void
     {
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
 
-        if (compare(proj(*rhs), proj(*lhs)))
-        {
+        if (comp(proj(*rhs), proj(*lhs))) {
             using utility::iter_swap;
             iter_swap(lhs, rhs);
         }
@@ -126,7 +126,7 @@ namespace cppsort::detail
         // only when the iterators don't have dedicated
         // iter_move or iter_swap ADL-found functions
 
-        swap_if(*lhs, *rhs, compare, projection);
+        swap_if(*lhs, *rhs, std::move(compare), std::move(projection));
     }
 }
 

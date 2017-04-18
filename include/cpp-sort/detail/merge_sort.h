@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,7 @@ namespace cppsort::detail
                          Compare compare, Projection projection)
         -> buffer_ptr<rvalue_reference_t<ForwardIterator>>
     {
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
 
         if (size < 14)
@@ -79,7 +80,7 @@ namespace cppsort::detail
 
         // Shrink the left partition to merge
         auto&& middle_proj = proj(*middle);
-        while (first != middle && not compare(middle_proj, proj(*first)))
+        while (first != middle && not comp(middle_proj, proj(*first)))
         {
             ++first;
             --size_left;
@@ -114,6 +115,7 @@ namespace cppsort::detail
                          Compare compare, Projection projection)
         -> buffer_ptr<rvalue_reference_t<BidirectionalIterator>>
     {
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
 
         if (size < 40)
@@ -141,7 +143,7 @@ namespace cppsort::detail
 
         // Shrink the left partition to merge
         auto&& middle_proj = proj(*middle);
-        while (first != middle && not compare(middle_proj, proj(*first)))
+        while (first != middle && not comp(middle_proj, proj(*first)))
         {
             ++first;
             --size_left;

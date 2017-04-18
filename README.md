@@ -29,14 +29,17 @@ int main()
 }
 ```
 
-**cpp-sort** actually provides a full set of sorting-related features. The most
-important one is probably the concept of *sorters* and *sorter adapters*. Sorters
-are function objects implementing a sorting algorithm and sorter adapters are
-special class templates designed to adapt sorters and alter their behaviour in some
-specific manner. The library provides sorters implementing common and not-so-common
-sorting algorithms as well as some specific adapters. It also provides fixed-size
-sorters and tools such as sorter facade or sorter traits, designed to craft your
-own sorters. Here is a more complete example of what the library can do:
+# The main features & the extra features
+
+**cpp-sort** actually provides a full set of sorting-related features. Here are the main
+building blocks of the library:
+* Every sorting algorithm exists as a function object called a [sorter](https://github.com/Morwenn/cpp-sort/wiki/Sorters)
+* Sorters can be wrapped in [sorter adapters](https://github.com/Morwenn/cpp-sort/wiki/Sorter-adapters) to augment their behaviour
+* The library provides a [sorter facade](https://github.com/Morwenn/cpp-sort/wiki/Sorter-facade) to easily build sorters
+* [Fixed-size sorters](https://github.com/Morwenn/cpp-sort/wiki/Fixed-size-sorters) can be used to efficiently sort tiny fixed-size collections
+* [Measures of presortedness](https://github.com/Morwenn/cpp-sort/wiki/Measures-of-presortedness) can be used to evaluate the disorder in a collection
+
+Here is a more complete example of what the library can do:
 
 ```cpp
 #include <algorithm>
@@ -51,28 +54,41 @@ own sorters. Here is a more complete example of what the library can do:
 
 int main()
 {
-    struct wrapper { int value; }
+    struct wrapper { int value; };
 
     std::forward_list<wrapper> li = { {5}, {8}, {3}, {2}, {9} };
     std::vector<wrapper> vec = { {5}, {8}, {3}, {2}, {9} };
-    
+
     // When used, this sorter will use a pattern-defeating quicksort
     // to sort random-access collections, and a mergesort otherwise
     using sorter = cppsort::hybrid_adapter<
         cppsort::pdq_sorter,
         cppsort::merge_sorter
     >;
-    
+    sorter sort;
+
     // Sort li and vec in reverse order using their value member
-    cppsort::sort(sorter{}, li, std::greater<>{}, &wrapper::value);
-    cppsort::sort(sorter{}, vec, std::greater<>{}, &wrapper::value);
+    sort(li, std::greater<>{}, &wrapper::value);
+    sort(vec, std::greater<>{}, &wrapper::value);
 
     assert(std::equal(
         std::begin(li), std::end(li),
-        std::begin(vec), std::end(vec)
+        std::begin(vec), std::end(vec),
+        [](auto& lhs, auto& rhs) { return lhs.value == rhs.value; }
     ));
 }
 ```
+
+Even when the sorting functions are used without the extra features, they still provide
+some interesting guarantees (ideas often taken from the Ranges TS):
+* They provide both an iterator and a range interface
+* When possible, they accept a custom comparator parameter
+* Most of them accept a projection parameter
+* They correctly handle proxy iterators with `iter_swap` and `iter_move`
+* They also work when iterators don't provide post-incrementation nor post-decrementation
+* The value types of the collections to be sorted need not be default-constructible
+* The value types of the collections to be sorted need not be copyable (only movable)
+* Stateless sorters can be converted to a function pointer for each overloaded `operator()`
 
 You can read more about all the available tools and find some tutorials about using
 and extending **cpp-sort** in [the wiki](https://github.com/Morwenn/cpp-sort/wiki).
@@ -93,21 +109,25 @@ wiki page](https://github.com/Morwenn/cpp-sort/wiki/Benchmarks).
 
 # Compiler support
 
-**cpp-sort** currently works with g++5 and clang++3.8. It uses some of the most
-recent (and not widely supported) C++14 features and will probably use the C++17
-features once they are available. The overall goal is to make sure that the library
-works with the latest g++ and clang++ versions, without going out of its way to
-support older releases.
+**cpp-sort** currently requires C++14 support, and only works with g++5 and clang++3.8
+or more recent versions of these compilers. Future development on the C++14 branch will
+try to remain compatible with these version. There is currently no plan to explicitly
+support other compilers.
 
-In the future, the branches will follow the following pattern: the master branch
-will remain C++14 and there will be a C++17 branch. There will be other branches
-forking the C++17 one for some of the published Technical Specifications (for
-example, there will likely be a branch for the concepts TS); these branches will
-eventually be merged in the C++17 one when the corresponding technical specifications
-are merged into the current C++ working draft (or in a C++20 branch if the
-specifications do not make it in time for the C++17 release). Of course the creation
-of such branches will depend on compiler support: if a feature isn't supported by
-either the latest g++ or clang++, I won't use it before the following release.
+The repository also contains an experimental [C++17 branch](https://github.com/Morwenn/cpp-sort/tree/c++17)
+which requires the most recent versions of g++ and clang++, and will probably require even
+more recent versions until the C++17 support of both compilers is stable enough. It is
+worth noting that code written against the C++14 branch is not guaranteed to work with the
+C++17 branch as the new language and standard library features replaced some of the utility
+headers; those deletions are documented. At some point in the future, the C++17 branch will
+have more features than the C++14 ones, such as proper handling of execution policies to
+implement parallel sorting algorithms. At some later point in the future, the C++17 branch
+will likely become the main branch, and the C++14 branch will only recceive bug fixes.
+
+The long-term goal is to make the library evolve with the C++ standard, and the kind of
+differences that already between the C++14 and C++17 branches will also exist between the
+future branches. Some features such as concepts and standard ranges will likely shape the
+futur of the library.
 
 # Thanks
 

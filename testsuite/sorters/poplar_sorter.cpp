@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2017 Morwenn
+ * Copyright (c) 2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,38 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef CPPSORT_DETAIL_IS_SORTED_UNTIL_H_
-#define CPPSORT_DETAIL_IS_SORTED_UNTIL_H_
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <catch.hpp>
+#include <cpp-sort/sorters/poplar_sorter.h>
+#include "../distributions.h"
 
-////////////////////////////////////////////////////////////
-// Headers
-////////////////////////////////////////////////////////////
-#include <cpp-sort/utility/as_function.h>
-
-namespace cppsort::detail
+TEST_CASE( "poplar_sorter tests", "[poplar_sorter]" )
 {
-    template<typename ForwardIterator, typename Compare, typename Projection>
-    auto is_sorted_until(ForwardIterator first, ForwardIterator last,
-                         Compare compare, Projection projection)
-        -> ForwardIterator
-    {
-        if (first != last)
-        {
-            auto&& comp = utility::as_function(compare);
-            auto&& proj = utility::as_function(projection);
+    // Distribution used to generate the data to sort
+    auto distribution = dist::shuffled{};
 
-            ForwardIterator next = first;
-            while (++next != last)
-            {
-                if (comp(proj(*next), proj(*first)))
-                {
-                    return next;
-                }
-                first = next;
-            }
-        }
-        return last;
+    SECTION( "tricky test case 131073" )
+    {
+        // With signed 32-bit difference_type for an iterator,
+        // sorting a collection of 131073 elements triggered a
+        // problem with the underlying bit tricks that eventually
+        // made the algorithm fail
+
+        auto size = 131073; // This part matters the most
+        std::vector<int> vec; vec.reserve(size);
+        distribution(std::back_inserter(vec), size, -1568);
+        cppsort::poplar_sort(vec);
+        CHECK( std::is_sorted(std::begin(vec), std::end(vec)) );
     }
 }
-
-#endif // CPPSORT_DETAIL_IS_SORTED_UNTIL_H_

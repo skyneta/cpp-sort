@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,8 +56,10 @@
 #include <cpp-sort/utility/iter_move.h>
 #include "../detail/inplace_merge.h"
 #include "../detail/iterator_traits.h"
+#include "../detail/lower_bound.h"
 #include "../detail/memory.h"
 #include "../detail/rotate.h"
+#include "../detail/upper_bound.h"
 
 namespace cppsort::utility
 {
@@ -142,7 +144,7 @@ namespace cppsort::utility
 
                 cppsort::detail::half_inplace_merge(
                     buffer, buff_it, f1, std::next(f1, n1), f0,
-                    n0, compare, projection
+                    n0, std::move(compare), std::move(projection)
                 );
                 return;
             }
@@ -183,10 +185,11 @@ namespace cppsort::utility
             -> void
         {
             using rvalue_reference = std::decay_t<cppsort::detail::rvalue_reference_t<ForwardIterator>>;
+            auto&& comp = as_function(compare);
             auto&& proj = as_function(projection);
 
             // Shrink the problem size on the left side
-            while (first != middle && not compare(proj(*middle), proj(*first)))
+            while (first != middle && not comp(proj(*middle), proj(*first)))
             {
                 ++first;
             }

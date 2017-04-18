@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <functional>
+#include <iterator>
 #include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/functional.h>
 #include "minmax_element.h"
@@ -43,6 +44,7 @@ namespace cppsort::detail
                                       Compare compare={}, Projection projection={})
         -> decltype(auto)
     {
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
 
         // Function-local result type, only the names of the
@@ -61,7 +63,7 @@ namespace cppsort::detail
 
         // While it is sorted, the min and max are obvious
         auto current = first;
-        while (not compare(proj(*next), proj(*current)))
+        while (not comp(proj(*next), proj(*current)))
         {
             ++current;
             ++next;
@@ -69,7 +71,7 @@ namespace cppsort::detail
             // The range is fully sorted
             if (next == last)
             {
-                result.max = next;
+                result.max = current;
                 return result;
             }
         }
@@ -80,11 +82,11 @@ namespace cppsort::detail
         result.max = current;
 
         auto tmp = minmax_element(next, last, compare, projection);
-        if (compare(proj(*tmp.first), proj(*result.min)))
+        if (comp(proj(*tmp.first), proj(*result.min)))
         {
             result.min = tmp.first;
         }
-        if (not compare(proj(*tmp.second), proj(*result.max)))
+        if (not comp(proj(*tmp.second), proj(*result.max)))
         {
             result.max = tmp.second;
         }

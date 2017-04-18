@@ -37,6 +37,7 @@
 #include <iterator>
 #include <memory>
 #include <new>
+#include <type_traits>
 #include <utility>
 #include <vector>
 #include <cpp-sort/utility/as_function.h>
@@ -332,7 +333,7 @@ namespace cppsort::detail
             assert( lastOfs < ofs );
             assert( ofs <= len );
 
-            return lower_bound(base+lastOfs+1, base+ofs, key_proj, comp_.base(), proj_) - base;
+            return lower_bound(base+(lastOfs+1), base+ofs, key_proj, comp_.base(), proj_) - base;
         }
 
         template<typename T, typename Iter>
@@ -388,7 +389,7 @@ namespace cppsort::detail
             assert( lastOfs < ofs );
             assert( ofs <= len );
 
-            return upper_bound(base+lastOfs+1, base+ofs, key_proj, comp_.base(), proj_) - base;
+            return upper_bound(base+(lastOfs+1), base+ofs, key_proj, comp_.base(), proj_) - base;
         }
 
         auto mergeLo(iterator const base1, difference_type len1, iterator const base2, difference_type len2)
@@ -698,8 +699,10 @@ namespace cppsort::detail
                  Compare compare, Projection projection)
         -> void
     {
-        TimSort<RandomAccessIterator, Compare, Projection>::sort(std::move(first), std::move(last),
-                                                                 std::move(compare), std::move(projection));
+        using compare_t = std::decay_t<decltype(utility::as_function(compare))>;
+        TimSort<RandomAccessIterator, compare_t, Projection>::sort(std::move(first), std::move(last),
+                                                                   utility::as_function(compare),
+                                                                   std::move(projection));
     }
 }
 

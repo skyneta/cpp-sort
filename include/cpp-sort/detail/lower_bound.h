@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ namespace cppsort::detail
                      Compare compare, Projection projection)
         -> ForwardIterator
     {
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
 
         auto size = std::distance(first, last);
@@ -46,7 +47,7 @@ namespace cppsort::detail
         {
             ForwardIterator it = first;
             std::advance(it, size / 2);
-            if (compare(proj(*it), value))
+            if (comp(proj(*it), value))
             {
                 first = ++it;
                 size -= size / 2 + 1;

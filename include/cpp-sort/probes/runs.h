@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,7 @@ namespace cppsort::probe
                 -> cppsort::detail::difference_type_t<ForwardIterator>
             {
                 using difference_type = cppsort::detail::difference_type_t<ForwardIterator>;
+                auto&& comp = utility::as_function(compare);
                 auto&& proj = utility::as_function(projection);
 
                 if (first == last || std::next(first) == last)
@@ -69,7 +70,7 @@ namespace cppsort::probe
                 difference_type count = 0;
                 while (true)
                 {
-                    while (next != last && compare(proj(*current), proj(*next)))
+                    while (next != last && comp(proj(*current), proj(*next)))
                     {
                         ++current;
                         ++next;

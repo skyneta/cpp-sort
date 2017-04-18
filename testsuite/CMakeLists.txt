@@ -10,6 +10,7 @@ set(
     adapters/container_aware_adapter_list.cpp
     adapters/container_aware_adapter_forward_list.cpp
     adapters/counting_adapter.cpp
+    adapters/every_adapter_internal_compare.cpp
     adapters/hybrid_adapter_is_stable.cpp
     adapters/hybrid_adapter_partial_compare.cpp
     adapters/hybrid_adapter_sfinae.cpp
@@ -77,6 +78,7 @@ set(
     sorters/merge_insertion_sorter_projection.cpp
     sorters/merge_sorter.cpp
     sorters/merge_sorter_projection.cpp
+    sorters/poplar_sorter.cpp
     sorters/ska_sorter.cpp
     sorters/ska_sorter_projection.cpp
     sorters/spread_sorter.cpp
@@ -90,6 +92,7 @@ set(
 
     utility/as_projection.cpp
     utility/as_projection_iterable.cpp
+    utility/branchless_traits.cpp
     utility/buffer.cpp
     utility/iter_swap.cpp
 )
@@ -101,6 +104,7 @@ add_executable(
     main.cpp
     every_instantiated_sorter.cpp
     every_sorter.cpp
+    every_sorter_internal_compare.cpp
     every_sorter_move_only.cpp
     every_sorter_no_post_iterator.cpp
     every_sorter_span.cpp

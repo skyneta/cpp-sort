@@ -6,7 +6,7 @@
 // This file is dual licensed under the MIT and the University of Illinois Open
 // Source Licenses. See LICENSE.TXT for details.
 //
-// //  Modified in 2015-2016 by Morwenn for inclusion into cpp-sort
+// //  Modified in 2015-2017 by Morwenn for inclusion into cpp-sort
 //
 //===----------------------------------------------------------------------===//
 #ifndef CPPSORT_DETAIL_HEAP_OPERATIONS_H_
@@ -25,12 +25,13 @@ namespace cppsort::detail
 {
     template<typename Compare, typename RandomAccessIterator, typename Projection>
     auto sift_down(RandomAccessIterator first, RandomAccessIterator,
-                   Compare comp, Projection projection,
+                   Compare compare, Projection projection,
                    difference_type_t<RandomAccessIterator> len,
                    RandomAccessIterator start)
         -> void
     {
         using utility::iter_move;
+        auto&& comp = utility::as_function(compare);
         auto&& proj = utility::as_function(projection);
         using difference_type = difference_type_t<RandomAccessIterator>;
 
@@ -82,43 +83,40 @@ namespace cppsort::detail
 
     template<typename RandomAccessIterator, typename Compare, typename Projection>
     auto make_heap(RandomAccessIterator first, RandomAccessIterator last,
-                   Compare comp, Projection projection)
+                   Compare compare, Projection projection)
         -> void
     {
         using difference_type = difference_type_t<RandomAccessIterator>;
         difference_type n = std::distance(first, last);
-        if (n > 1)
-        {
+        if (n > 1) {
             // start from the first parent, there is no need to consider children
-            for (difference_type start = (n - 2) / 2; start >= 0; --start)
-            {
-                sift_down<Compare>(first, last, comp, projection, n, first + start);
+            for (difference_type start = (n - 2) / 2; start >= 0; --start) {
+                sift_down<Compare>(first, last, compare, projection, n, first + start);
             }
         }
     }
 
     template<typename Compare, typename RandomAccessIterator, typename Projection>
     auto pop_heap(RandomAccessIterator first, RandomAccessIterator last,
-                  Compare comp, Projection projection,
+                  Compare compare, Projection projection,
                   difference_type_t<RandomAccessIterator> len)
         -> void
     {
-        if (len > 1)
-        {
+        if (len > 1) {
             using utility::iter_swap;
             iter_swap(first, --last);
-            sift_down<Compare>(first, last, comp, projection, len - 1, first);
+            sift_down<Compare>(first, last, compare, std::move(projection), len - 1, first);
         }
     }
 
     template<typename RandomAccessIterator, typename Compare, typename Projection>
     auto sort_heap(RandomAccessIterator first, RandomAccessIterator last,
-                   Compare comp, Projection projection)
+                   Compare compare, Projection projection)
         -> void
     {
         using difference_type = difference_type_t<RandomAccessIterator>;
         for (difference_type n = last - first; n > 1; --last, (void) --n) {
-            pop_heap<Compare>(first, last, comp, projection, n);
+            pop_heap<Compare>(first, last, compare, projection, n);
         }
     }
 }
