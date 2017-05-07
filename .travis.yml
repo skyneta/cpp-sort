@@ -16,16 +16,16 @@ env:
 addons:
   apt:
     sources:
-      - llvm-toolchain-trusty-3.9
+      - llvm-toolchain-trusty-4.0
       - ubuntu-toolchain-r-test
     packages:
-      - clang-3.9
+      - clang-4.0
       - g++-6
       - valgrind
 
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-6"; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.9"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-4.0"; fi
 
 script: 
   - cmake -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DSANITIZE="${SANITIZE}" .
