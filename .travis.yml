@@ -1,5 +1,8 @@
 language: cpp
 
+dist: trusty
+sudo: false
+
 compiler:
   - clang
   - gcc
@@ -13,13 +16,10 @@ env:
 addons:
   apt:
     sources:
-      - george-edison55-precise-backports
-      - llvm-toolchain-precise-3.9
+      - llvm-toolchain-trusty-3.9
       - ubuntu-toolchain-r-test
     packages:
       - clang-3.9
-      - cmake
-      - cmake-data
       - g++-6
       - valgrind
 
