@@ -20,11 +20,11 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - clang-5.0
-      - g++-6
+      - g++-7
       - valgrind
 
 install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-6"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-7"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-5.0"; fi
 
 script: 
