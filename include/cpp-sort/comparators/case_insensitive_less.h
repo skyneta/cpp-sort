@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@
 #include <utility>
 #include <cpp-sort/utility/detection.h>
 #include <cpp-sort/utility/is_callable.h>
-#include <cpp-sort/utility/static_const.h>
 
 namespace cppsort
 {
@@ -291,12 +290,7 @@ namespace cppsort
         }
     }
 
-    namespace
-    {
-        constexpr auto&& case_insensitive_less = utility::static_const<
-            detail::case_insensitive_less_fn
-        >::value;
-    }
+    inline constexpr detail::case_insensitive_less_fn case_insensitive_less{};
 }
 
 #endif // CPPSORT_COMPARATORS_CASE_INSENSITIVE_LESS_H_

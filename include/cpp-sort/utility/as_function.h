@@ -1,7 +1,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
-//  Modified in 2015-2016 by Morwenn for inclusion into cpp-sort
+//  Modified in 2015-2017 by Morwenn for inclusion into cpp-sort
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -19,7 +19,6 @@
 #include <functional>
 #include <type_traits>
 #include <utility>
-#include <cpp-sort/utility/static_const.h>
 
 namespace cppsort::utility
 {
@@ -51,12 +50,7 @@ namespace cppsort::utility
         };
     }
 
-    namespace
-    {
-        constexpr auto&& as_function = static_const<
-            detail::as_function_fn
-        >::value;
-    }
+    inline constexpr detail::as_function_fn as_function{};
 }
 
 #endif // CPPSORT_UTILITY_AS_FUNCTION_H_

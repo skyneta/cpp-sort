@@ -2,7 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
-//  Modified in 2016 by Morwenn for inclusion into cpp-sort
+//  Modified in 2016-2017 by Morwenn for inclusion into cpp-sort
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -23,7 +23,6 @@
 #include <initializer_list>
 #include <iterator>
 #include <type_traits>
-#include <cpp-sort/utility/static_const.h>
 
 namespace cppsort::utility
 {
@@ -240,10 +239,10 @@ namespace cppsort::utility
         {
             template<typename Rng>
             constexpr auto operator()(const Rng& rng) const
-                noexcept(noexcept(utility::static_const<begin_fn>::value(rng)))
-                -> decltype(utility::static_const<begin_fn>::value(rng))
+                noexcept(noexcept(begin_fn{}(rng)))
+                -> decltype(begin_fn{}(rng))
             {
-                return utility::static_const<begin_fn>::value(rng);
+                return begin_fn{}(rng);
             }
         };
 
@@ -251,10 +250,10 @@ namespace cppsort::utility
         {
             template<typename Rng>
             constexpr auto operator()(const Rng& rng) const
-                noexcept(noexcept(utility::static_const<end_fn>::value(rng)))
-                -> decltype(utility::static_const<end_fn>::value(rng))
+                noexcept(noexcept(end_fn{}(rng)))
+                -> decltype(end_fn{}(rng))
             {
-                return utility::static_const<end_fn>::value(rng);
+                return end_fn{}(rng);
             }
         };
 
@@ -262,10 +261,10 @@ namespace cppsort::utility
         {
             template<typename Rng>
             constexpr auto operator()(const Rng& rng) const
-                noexcept(noexcept(utility::static_const<rbegin_fn>::value(rng)))
-                -> decltype(utility::static_const<rbegin_fn>::value(rng))
+                noexcept(noexcept(rbegin_fn{}(rng)))
+                -> decltype(rbegin_fn{}(rng))
             {
-                return utility::static_const<rbegin_fn>::value(rng);
+                return rbegin_fn{}(rng);
             }
         };
 
@@ -273,73 +272,22 @@ namespace cppsort::utility
         {
             template<typename Rng>
             constexpr auto operator()(const Rng& rng) const
-                noexcept(noexcept(utility::static_const<rend_fn>::value(rng)))
-                -> decltype(utility::static_const<rend_fn>::value(rng))
+                noexcept(noexcept(rend_fn{}(rng)))
+                -> decltype(rend_fn{}(rng))
             {
-                return utility::static_const<rend_fn>::value(rng);
+                return rend_fn{}(rng);
             }
         };
     }
 
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `begin` free function
-    namespace
-    {
-        constexpr auto&& begin = utility::static_const<begin_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `end` free function
-    namespace
-    {
-        constexpr auto&& end = utility::static_const<end_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `begin` free function
-    /// with a const-qualified argument.
-    namespace
-    {
-        constexpr auto&& cbegin = utility::static_const<cbegin_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `end` free function
-    /// with a const-qualified argument.
-    namespace
-    {
-        constexpr auto&& cend = utility::static_const<cend_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `rbegin` free function
-    namespace
-    {
-        constexpr auto&& rbegin = utility::static_const<rbegin_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `rend` free function
-    namespace
-    {
-        constexpr auto&& rend = utility::static_const<rend_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `rbegin` free function
-    /// with a const-qualified argument.
-    namespace
-    {
-        constexpr auto&& crbegin = utility::static_const<crbegin_fn>::value;
-    }
-
-    /// \ingroup group-core
-    /// \return The result of an unqualified call to the `rend` free function
-    /// with a const-qualified argument.
-    namespace
-    {
-        constexpr auto&& crend = utility::static_const<crend_fn>::value;
-    }
+    inline constexpr begin_fn begin{};
+    inline constexpr end_fn end{};
+    inline constexpr cbegin_fn cbegin{};
+    inline constexpr cend_fn cend{};
+    inline constexpr rbegin_fn rbegin{};
+    inline constexpr rend_fn rend{};
+    inline constexpr crbegin_fn crbegin{};
+    inline constexpr crend_fn crend{};
 }
 
 #endif // CPPSORT_UTILITY_BEGIN_END_H_

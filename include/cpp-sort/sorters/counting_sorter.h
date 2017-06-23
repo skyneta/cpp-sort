@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@
 #include <type_traits>
 #include <utility>
 #include <cpp-sort/sorter_facade.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/counting_sort.h"
 #include "../detail/iterator_traits.h"
 
@@ -78,11 +77,7 @@ namespace cppsort
     ////////////////////////////////////////////////////////////
     // Sort function
 
-    namespace
-    {
-        constexpr auto&& counting_sort
-            = utility::static_const<counting_sorter>::value;
-    }
+    inline constexpr counting_sorter counting_sort{};
 }
 
 #endif // CPPSORT_SORTERS_COUNTING_SORTER_H_

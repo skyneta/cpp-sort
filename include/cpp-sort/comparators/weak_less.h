@@ -32,7 +32,6 @@
 #include <utility>
 #include <cpp-sort/comparators/total_less.h>
 #include <cpp-sort/utility/branchless_traits.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/floating_point_weight.h"
 
 namespace cppsort
@@ -81,12 +80,7 @@ namespace cppsort
         };
     }
 
-    namespace
-    {
-        constexpr auto&& weak_less = utility::static_const<
-            detail::weak_less_fn
-        >::value;
-    }
+    inline constexpr detail::weak_less_fn weak_less{};
 
     // Branchless traits
 

@@ -31,7 +31,6 @@
 #include <type_traits>
 #include <utility>
 #include <cpp-sort/utility/branchless_traits.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/floating_point_weight.h"
 
 namespace cppsort
@@ -82,12 +81,7 @@ namespace cppsort
         };
     }
 
-    namespace
-    {
-        constexpr auto&& total_greater = utility::static_const<
-            detail::total_greater_fn
-        >::value;
-    }
+    inline constexpr detail::total_greater_fn total_greater{};
 
     // Branchless traits
 

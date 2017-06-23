@@ -36,7 +36,6 @@
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/functional.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/indirect_compare.h"
 #include "../detail/iterator_traits.h"
 
@@ -129,12 +128,7 @@ namespace cppsort::probe
         };
     }
 
-    namespace
-    {
-        constexpr auto&& exc = utility::static_const<
-            sorter_facade<detail::exc_impl>
-        >::value;
-    }
+    inline constexpr sorter_facade<detail::exc_impl> exc{};
 }
 
 #endif // CPPSORT_PROBES_EXC_H_

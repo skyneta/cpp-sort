@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/iterator_traits.h"
 #include "../detail/selection_sort.h"
 
@@ -86,11 +85,7 @@ namespace cppsort
     ////////////////////////////////////////////////////////////
     // Sort function
 
-    namespace
-    {
-        constexpr auto&& selection_sort
-            = utility::static_const<selection_sorter>::value;
-    }
+    inline constexpr selection_sorter selection_sort{};
 }
 
 #ifdef CPPSORT_ADAPTERS_CONTAINER_AWARE_ADAPTER_DONE_

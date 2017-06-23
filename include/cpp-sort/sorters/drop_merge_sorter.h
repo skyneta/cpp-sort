@@ -34,7 +34,6 @@
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/drop_merge_sort.h"
 #include "../detail/iterator_traits.h"
 
@@ -86,11 +85,7 @@ namespace cppsort
     ////////////////////////////////////////////////////////////
     // Sort function
 
-    namespace
-    {
-        constexpr auto&& drop_merge_sort
-            = utility::static_const<drop_merge_sorter>::value;
-    }
+    inline constexpr drop_merge_sorter drop_merge_sort{};
 }
 
 #endif // CPPSORT_SORTERS_DROP_MERGE_SORTER_H_

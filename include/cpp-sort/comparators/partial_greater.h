@@ -31,7 +31,6 @@
 #include <utility>
 #include <cpp-sort/comparators/weak_greater.h>
 #include <cpp-sort/utility/branchless_traits.h>
-#include <cpp-sort/utility/static_const.h>
 
 namespace cppsort
 {
@@ -73,12 +72,7 @@ namespace cppsort
         };
     }
 
-    namespace
-    {
-        constexpr auto&& partial_greater = utility::static_const<
-            detail::partial_greater_fn
-        >::value;
-    }
+    inline constexpr detail::partial_greater_fn partial_greater{};
 
     // Branchless traits
 

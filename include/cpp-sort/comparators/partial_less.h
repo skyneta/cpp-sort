@@ -31,7 +31,6 @@
 #include <utility>
 #include <cpp-sort/comparators/weak_less.h>
 #include <cpp-sort/utility/branchless_traits.h>
-#include <cpp-sort/utility/static_const.h>
 
 namespace cppsort
 {
@@ -73,12 +72,7 @@ namespace cppsort
         };
     }
 
-    namespace
-    {
-        constexpr auto&& partial_less = utility::static_const<
-            detail::partial_less_fn
-        >::value;
-    }
+    inline constexpr detail::partial_less_fn partial_less{};
 
     // Branchless traits
 

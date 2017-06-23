@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,6 @@
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/count_inversions.h"
 #include "../detail/indirect_compare.h"
 #include "../detail/iterator_traits.h"
@@ -104,12 +103,7 @@ namespace cppsort::probe
         };
     }
 
-    namespace
-    {
-        constexpr auto&& inv = utility::static_const<
-            sorter_facade<detail::inv_impl>
-        >::value;
-    }
+    inline constexpr sorter_facade<detail::inv_impl> inv{};
 }
 
 #endif // CPPSORT_PROBES_INV_H_

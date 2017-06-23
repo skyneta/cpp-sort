@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/is_p_sorted.h"
 
 namespace cppsort::probe
@@ -72,12 +71,7 @@ namespace cppsort::probe
         };
     }
 
-    namespace
-    {
-        constexpr auto&& par = utility::static_const<
-            sorter_facade<detail::par_impl>
-        >::value;
-    }
+    inline constexpr sorter_facade<detail::par_impl> par{};
 }
 
 #endif // CPPSORT_PROBES_PAR_H_

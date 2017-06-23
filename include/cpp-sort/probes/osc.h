@@ -35,7 +35,6 @@
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/functional.h>
-#include <cpp-sort/utility/static_const.h>
 #include "../detail/iterator_traits.h"
 
 namespace cppsort::probe
@@ -90,12 +89,7 @@ namespace cppsort::probe
         };
     }
 
-    namespace
-    {
-        constexpr auto&& osc = utility::static_const<
-            sorter_facade<detail::osc_impl>
-        >::value;
-    }
+    inline constexpr sorter_facade<detail::osc_impl> osc{};
 }
 
 #endif // CPPSORT_PROBES_OSC_H_

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@
 #include <cctype>
 #include <iterator>
 #include <utility>
-#include <cpp-sort/utility/static_const.h>
 
 namespace cppsort
 {
@@ -128,12 +127,7 @@ namespace cppsort
         };
     }
 
-    namespace
-    {
-        constexpr auto&& natural_less = utility::static_const<
-            detail::natural_less_fn
-        >::value;
-    }
+    inline constexpr detail::natural_less_fn natural_less{};
 }
 
 #endif // CPPSORT_COMPARATORS_NATURAL_LESS_H_
