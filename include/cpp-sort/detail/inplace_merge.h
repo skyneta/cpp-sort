@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////
 #include <algorithm>
 #include <cstddef>
+#include <functional>
 #include <iterator>
 #include <memory>
 #include <type_traits>
@@ -32,35 +33,6 @@
 
 namespace cppsort::detail
 {
-    template<typename Predicate>
-    class negate
-    {
-    private:
-        Predicate predicate;
-    public:
-        negate() {}
-
-        explicit negate(Predicate predicate):
-            predicate(predicate)
-        {}
-
-        template<typename T1>
-        auto operator()(const T1& x)
-            -> bool
-        {
-            auto&& pred = utility::as_function(predicate);
-            return not pred(x);
-        }
-
-        template<typename T1, typename T2>
-        auto operator()(const T1& x, const T2& y)
-            -> bool
-        {
-            auto&& pred = utility::as_function(predicate);
-            return not pred(x, y);
-        }
-    };
-
     template<typename Compare, typename InputIterator1, typename InputIterator2,
              typename OutputIterator, typename Size, typename Projection>
     auto half_inplace_merge(InputIterator1 first1, InputIterator1 last1,
@@ -118,7 +90,7 @@ namespace cppsort::detail
         if (len1 <= len2)
         {
             rvalue_reference* p = buff;
-            for (BidirectionalIterator i = first; i != middle; ++d, (void) ++i, ++p) {
+            for (BidirectionalIterator i = first ; i != middle ; ++d, (void) ++i, ++p) {
                 ::new(p) rvalue_reference(iter_move(i));
             }
             half_inplace_merge(buff, p, middle, last, first, len1,
@@ -127,15 +99,15 @@ namespace cppsort::detail
         else
         {
             rvalue_reference* p = buff;
-            for (BidirectionalIterator i = middle; i != last; ++d, (void) ++i, ++p) {
+            for (BidirectionalIterator i = middle ; i != last ; ++d, (void) ++i, ++p) {
                 ::new(p) rvalue_reference(iter_move(i));
             }
-            using RBi = std::reverse_iterator<BidirectionalIterator>;
-            using Rv = std::reverse_iterator<rvalue_reference*>;
-            half_inplace_merge(Rv(p), Rv(buff),
-                               RBi(middle), RBi(first),
-                               RBi(last), len2,
-                               negate<Compare>(compare), std::move(projection));
+            using rbi = std::reverse_iterator<BidirectionalIterator>;
+            using rv = std::reverse_iterator<rvalue_reference*>;
+            half_inplace_merge(rv(p), rv(buff),
+                               rbi(middle), rbi(first),
+                               rbi(last), len2,
+                               std::not_fn(compare), std::move(projection));
         }
     }
 
