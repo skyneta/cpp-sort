@@ -167,9 +167,11 @@ namespace cppsort::detail
             case 3:
                 to_call(begin);
                 ++begin;
+                [[fallthrough]];
             case 2:
                 to_call(begin);
                 ++begin;
+                [[fallthrough]];
             case 1:
                 to_call(begin);
         }
