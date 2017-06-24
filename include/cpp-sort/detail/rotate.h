@@ -6,7 +6,7 @@
 // This file is dual licensed under the MIT and the University of Illinois Open
 // Source Licenses. See LICENSE.TXT for details.
 //
-// //  Modified in 2016 by Morwenn for inclusion into cpp-sort
+// Modified in 2016-2017 by Morwenn for inclusion into cpp-sort
 //
 //===----------------------------------------------------------------------===//
 #ifndef CPPSORT_DETAIL_ROTATE_H_
@@ -16,6 +16,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <iterator>
+#include <numeric>
 #include <type_traits>
 #include <utility>
 #include <cpp-sort/utility/iter_move.h>
@@ -87,19 +88,6 @@ namespace cppsort::detail
         return r;
     }
 
-    template<typename Integral>
-    auto gcd(Integral x, Integral y)
-        -> Integral
-    {
-        do
-        {
-            Integral t = x % y;
-            x = y;
-            y = t;
-        } while (y);
-        return x;
-    }
-
     template<typename RandomAccessIterator>
     auto rotate_gcd(RandomAccessIterator first, RandomAccessIterator middle,
                     RandomAccessIterator last)
@@ -115,7 +103,7 @@ namespace cppsort::detail
             detail::swap_ranges(first, middle, middle);
             return middle;
         }
-        const difference_type g = gcd(m1, m2);
+        const difference_type g = std::gcd(m1, m2);
         for (RandomAccessIterator p = first + g; p != first;)
         {
             auto t  = iter_move(--p);
