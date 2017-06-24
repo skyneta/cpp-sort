@@ -47,7 +47,7 @@ namespace cppsort
             template<typename ForwardIterator>
             auto operator()(ForwardIterator first, ForwardIterator last) const
                 -> std::enable_if_t<
-                    std::is_integral<value_type_t<ForwardIterator>>::value
+                    std::is_integral_v<value_type_t<ForwardIterator>>
                 >
             {
                 counting_sort(std::move(first), std::move(last));
@@ -56,7 +56,7 @@ namespace cppsort
             template<typename ForwardIterator>
             auto operator()(ForwardIterator first, ForwardIterator last, std::greater<>) const
                 -> std::enable_if_t<
-                    std::is_integral<value_type_t<ForwardIterator>>::value
+                    std::is_integral_v<value_type_t<ForwardIterator>>
                 >
             {
                 reverse_counting_sort(std::move(first), std::move(last));

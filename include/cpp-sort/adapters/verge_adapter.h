@@ -59,10 +59,10 @@ namespace cppsort
                 -> void
             {
                 static_assert(
-                    std::is_base_of<
+                    std::is_base_of_v<
                         std::bidirectional_iterator_tag,
                         iterator_category_t<RandomAccessIterator>
-                    >::value,
+                    >,
                     "verge_adapter requires at least random-access iterators"
                 );
 

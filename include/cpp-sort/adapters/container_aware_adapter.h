@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -168,7 +168,7 @@ namespace cppsort
             >
             auto operator()(Iterable& iterable, Compare compare) const
                 -> std::enable_if_t<
-                    not is_projection<Compare, Iterable>::value &&
+                    not is_projection_v<Compare, Iterable> &&
                     not detail::can_comparison_sort<Sorter, Iterable, Compare>::value,
                     std::conditional_t<
                         Stability,
@@ -255,7 +255,7 @@ namespace cppsort
             >
             auto operator()(Iterable& iterable, Projection projection) const
                 -> std::enable_if_t<
-                    is_projection<Projection, Iterable>::value &&
+                    is_projection_v<Projection, Iterable> &&
                     not detail::can_projection_sort<Sorter, Iterable, Projection>::value &&
                     not detail::can_comparison_projection_sort<Sorter, Iterable, std::less<>, Projection>::value &&
                     not detail::can_comparison_sort<

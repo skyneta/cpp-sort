@@ -63,7 +63,7 @@ namespace cppsort::detail
 
     template<
         typename Integer,
-        typename = std::enable_if_t<std::is_integral<Integer>::value>
+        typename = std::enable_if_t<std::is_integral_v<Integer>>
     >
     auto swap_if(Integer& x, Integer& y, std::less<>, utility::identity)
         -> void
@@ -75,7 +75,7 @@ namespace cppsort::detail
 
     template<
         typename Integer,
-        typename = std::enable_if_t<std::is_integral<Integer>::value>
+        typename = std::enable_if_t<std::is_integral_v<Integer>>
     >
     auto swap_if(Integer& x, Integer& y, std::greater<>, utility::identity)
         -> void

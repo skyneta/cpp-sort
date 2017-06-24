@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,9 +59,9 @@ namespace cppsort
                     Projection, ForwardIterator, Compare
                 >>
             {
-                static_assert(not std::is_same<Sorter, std_sorter>::value,
+                static_assert(not std::is_same_v<Sorter, std_sorter>,
                               "std_sorter doesn't work with schwartz_adapter");
-                static_assert(not std::is_same<Sorter, stable_adapter<std_sorter>>::value,
+                static_assert(not std::is_same_v<Sorter, stable_adapter<std_sorter>>,
                               "stable_adapter<std_sorter> doesn't work with schwartz_adapter");
 
                 auto&& proj = utility::as_function(projection);

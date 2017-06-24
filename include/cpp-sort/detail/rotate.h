@@ -58,31 +58,31 @@ namespace cppsort::detail
         using utility::iter_swap;
 
         ForwardIterator i = middle;
-        while (true)
-        {
+        while (true) {
             iter_swap(first, i);
             ++first;
-            if (++i == last)
+            if (++i == last) {
                 break;
-            if (first == middle)
+            }
+            if (first == middle) {
                 middle = i;
+            }
         }
+
         ForwardIterator r = first;
-        if (first != middle)
-        {
+        if (first != middle) {
             i = middle;
-            while (true)
-            {
+            while (true) {
                 iter_swap(first, i);
                 ++first;
-                if (++i == last)
-                {
-                    if (first == middle)
+                if (++i == last) {
+                    if (first == middle) {
                         break;
+                    }
                     i = middle;
-                }
-                else if (first == middle)
+                } else if (first == middle) {
                     middle = i;
+                }
             }
         }
         return r;
@@ -98,26 +98,25 @@ namespace cppsort::detail
 
         const difference_type m1 = middle - first;
         const difference_type m2 = last - middle;
-        if (m1 == m2)
-        {
+        if (m1 == m2) {
             detail::swap_ranges(first, middle, middle);
             return middle;
         }
+
         const difference_type g = std::gcd(m1, m2);
-        for (RandomAccessIterator p = first + g; p != first;)
-        {
-            auto t  = iter_move(--p);
+        for (RandomAccessIterator p = first + g ; p != first ;) {
+            auto t = iter_move(--p);
             RandomAccessIterator p1 = p;
             RandomAccessIterator p2 = p1 + m1;
-            do
-            {
+            do {
                 *p1 = iter_move(p2);
                 p1 = p2;
                 const difference_type d = last - p2;
-                if (m1 < d)
+                if (m1 < d) {
                     p2 += m1;
-                else
+                } else {
                     p2 = first + (m1 - d);
+                }
             } while (p2 != p);
             *p1 = std::move(t);
         }
@@ -130,10 +129,10 @@ namespace cppsort::detail
         -> ForwardIterator
     {
         using value_type = value_type_t<ForwardIterator>;
-        if (std::is_trivially_move_assignable<value_type>::value)
-        {
-            if (std::next(first) == middle)
+        if (std::is_trivially_move_assignable_v<value_type>) {
+            if (std::next(first) == middle) {
                 return rotate_left(first, last);
+            }
         }
         return rotate_forward(first, middle, last);
     }
@@ -144,12 +143,13 @@ namespace cppsort::detail
         -> BidirectionalIterator
     {
         using value_type = value_type_t<BidirectionalIterator>;
-        if (std::is_trivially_move_assignable<value_type>::value)
-        {
-            if (std::next(first) == middle)
+        if (std::is_trivially_move_assignable_v<value_type>) {
+            if (std::next(first) == middle) {
                 return rotate_left(first, last);
-            if (std::next(middle) == last)
+            }
+            if (std::next(middle) == last) {
                 return rotate_right(first, last);
+            }
         }
         return rotate_forward(first, middle, last);
     }
@@ -160,12 +160,13 @@ namespace cppsort::detail
         -> RandomAccessIterator
     {
         using value_type = value_type_t<RandomAccessIterator>;
-        if (std::is_trivially_move_assignable<value_type>::value)
-        {
-            if (std::next(first) == middle)
+        if (std::is_trivially_move_assignable_v<value_type>) {
+            if (std::next(first) == middle) {
                 return rotate_left(first, last);
-            if (std::next(middle) == last)
+            }
+            if (std::next(middle) == last) {
                 return rotate_right(first, last);
+            }
             return rotate_gcd(first, middle, last);
         }
         return rotate_forward(first, middle, last);
@@ -175,10 +176,12 @@ namespace cppsort::detail
     auto rotate(ForwardIterator first, ForwardIterator middle, ForwardIterator last)
         -> ForwardIterator
     {
-        if (first == middle)
+        if (first == middle) {
             return last;
-        if (middle == last)
+        }
+        if (middle == last) {
             return first;
+        }
         return rotate_impl(first, middle, last, iterator_category_t<ForwardIterator>{});
     }
 }

@@ -36,7 +36,7 @@ namespace cppsort::detail
     template<typename T>
     auto unwrap_iter(std::move_iterator<T*> it)
         -> std::enable_if_t<
-            std::is_trivially_copy_assignable<T>::value,
+            std::is_trivially_copy_assignable_v<T>,
             T*
         >
     {
@@ -61,8 +61,8 @@ namespace cppsort::detail
     template<typename T, typename U>
     auto move_impl(T* first, T* last, U* result)
         -> std::enable_if_t<
-            std::is_same<std::remove_const_t<T>, U>::value &&
-            std::is_trivially_copy_assignable<U>::value,
+            std::is_same_v<std::remove_const_t<T>, U> &&
+            std::is_trivially_copy_assignable_v<U>,
             U*
         >
     {
@@ -98,8 +98,8 @@ namespace cppsort::detail
     template<typename T, typename U>
     auto move_backward_impl(T* first, T* last, U* result)
         -> std::enable_if_t<
-            std::is_same<std::remove_const_t<T>, U>::value &&
-            std::is_trivially_copy_assignable<U>::value,
+            std::is_same_v<std::remove_const_t<T>, U> &&
+            std::is_trivially_copy_assignable_v<U>,
             U*
         >
     {

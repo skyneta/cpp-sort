@@ -246,7 +246,7 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            std::negation<utility::is_callable<caller(U, U), nope_type>>::value,
+                            std::negation_v<utility::is_callable<caller(U, U), nope_type>>,
                             decltype(case_insensitive_less(lhs, rhs))
                         >
                     {
@@ -256,10 +256,10 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            std::conjunction<
+                            std::conjunction_v<
                                 utility::is_callable<caller(U, U), nope_type>,
                                 std::negation<utility::is_callable<caller(U, U, std::locale), nope_type>>
-                            >::value,
+                            >,
                             decltype(case_insensitive_less(lhs, rhs, loc))
                         >
                     {
@@ -269,10 +269,10 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            std::conjunction<
+                            std::conjunction_v<
                                 utility::is_callable<caller(U, U), nope_type>,
                                 utility::is_callable<caller(U, U, std::locale), nope_type>
-                            >::value,
+                            >,
                             bool
                         >
                     {

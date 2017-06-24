@@ -61,10 +61,10 @@ namespace cppsort
                 -> void
             {
                 static_assert(
-                    std::is_base_of<
+                    std::is_base_of_v<
                         std::forward_iterator_tag,
                         iterator_category_t<decltype(utility::begin(iterable))>
-                    >::value,
+                    >,
                     "merge_sorter requires at least forward iterators"
                 );
 
@@ -86,10 +86,10 @@ namespace cppsort
                 -> void
             {
                 static_assert(
-                    std::is_base_of<
+                    std::is_base_of_v<
                         std::forward_iterator_tag,
                         iterator_category_t<ForwardIterator>
-                    >::value,
+                    >,
                     "merge_sorter requires at least forward iterators"
                 );
 

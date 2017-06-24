@@ -268,10 +268,10 @@ namespace cppsort
         Sorter
     {
         static_assert(
-            std::is_base_of<
+            std::is_base_of_v<
                 cppsort::iterator_category<Sorter>,
                 Category
-            >::value,
+            >,
             "the new iterator category should be more specific"
         );
 
