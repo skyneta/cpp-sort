@@ -91,7 +91,7 @@ namespace cppsort
             // Conversion to function pointers
 
             template<typename Iterable>
-            operator fptr_t<Iterable>() const
+            constexpr operator fptr_t<Iterable>() const
             {
                 return [](Iterable& iterable) {
                     return this_class{}(iterable);
@@ -99,7 +99,7 @@ namespace cppsort
             }
 
             template<typename Iterable>
-            operator fptr_rvalue_t<Iterable>() const
+            constexpr operator fptr_rvalue_t<Iterable>() const
             {
                 return [](Iterable&& iterable) {
                     return this_class{}(std::move(iterable));
@@ -107,7 +107,7 @@ namespace cppsort
             }
 
             template<typename Iterable, typename Func>
-            operator fptr_func_t<Iterable, Func>() const
+            constexpr operator fptr_func_t<Iterable, Func>() const
             {
                 return [](Iterable& iterable, Func func) {
                     return this_class{}(iterable, func);
@@ -115,7 +115,7 @@ namespace cppsort
             }
 
             template<typename Iterable, typename Func>
-            operator fptr_rvalue_func_t<Iterable, Func>() const
+            constexpr operator fptr_rvalue_func_t<Iterable, Func>() const
             {
                 return [](Iterable&& iterable, Func func) {
                     return this_class{}(std::move(iterable), func);
@@ -123,7 +123,7 @@ namespace cppsort
             }
 
             template<typename Iterable, typename Func1, typename Func2>
-            operator fptr_func2_t<Iterable, Func1, Func2>() const
+            constexpr operator fptr_func2_t<Iterable, Func1, Func2>() const
             {
                 return [](Iterable& iterable, Func1 func1, Func2 func2) {
                     return this_class{}(iterable, func1, func2);
@@ -131,7 +131,7 @@ namespace cppsort
             }
 
             template<typename Iterable, typename Func1, typename Func2>
-            operator fptr_rvalue_func2_t<Iterable, Func1, Func2>() const
+            constexpr operator fptr_rvalue_func2_t<Iterable, Func1, Func2>() const
             {
                 return [](Iterable&& iterable, Func1 func1, Func2 func2) {
                     return this_class{}(std::move(iterable), func1, func2);
@@ -139,7 +139,7 @@ namespace cppsort
             }
 
             template<typename Iterator>
-            operator fptr_it_t<Iterator>() const
+            constexpr operator fptr_it_t<Iterator>() const
             {
                 return [](Iterator first, Iterator last) {
                     return this_class{}(first, last);
@@ -147,7 +147,7 @@ namespace cppsort
             }
 
             template<typename Iterator, typename Func>
-            operator fptr_func_it_t<Iterator, Func>() const
+            constexpr operator fptr_func_it_t<Iterator, Func>() const
             {
                 return [](Iterator first, Iterator last, Func func) {
                     return this_class{}(first, last, func);
@@ -155,7 +155,7 @@ namespace cppsort
             }
 
             template<typename Iterator, typename Func1, typename Func2>
-            operator fptr_func2_it_t<Iterator, Func1, Func2>() const
+            constexpr operator fptr_func2_it_t<Iterator, Func1, Func2>() const
             {
                 return [](Iterator first, Iterator last, Func1 func1, Func2 func2) {
                     return this_class{}(first, last, func1, func2);

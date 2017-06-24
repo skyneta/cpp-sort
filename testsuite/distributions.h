@@ -44,7 +44,7 @@ namespace dist
         using fptr_t = void(*)(OutputIterator, std::size_t);
 
         template<typename OutputIterator>
-        operator fptr_t<OutputIterator>() const
+        constexpr operator fptr_t<OutputIterator>() const
         {
             return [](OutputIterator out, std::size_t size) {
                 return Derived{}(out, size);
