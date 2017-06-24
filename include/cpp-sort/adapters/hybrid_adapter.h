@@ -91,23 +91,12 @@ namespace cppsort
                 ////////////////////////////////////////////////////////////
                 // Import every operator() in one class
 
-                template<typename Head, typename... Tail>
+                template<typename... Args>
                 struct sorters_merger:
-                    Head, sorters_merger<Tail...>
+                    Args...
                 {
-                    using Head::operator();
-                    using Head::detail_stability;
-
-                    using sorters_merger<Tail...>::operator();
-                    using sorters_merger<Tail...>::detail_stability;
-                };
-
-                template<typename Head>
-                struct sorters_merger<Head>:
-                    Head
-                {
-                    using Head::operator();
-                    using Head::detail_stability;
+                    using Args::operator()...;
+                    using Args::detail_stability...;
                 };
 
                 ////////////////////////////////////////////////////////////
