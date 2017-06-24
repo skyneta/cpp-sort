@@ -29,6 +29,7 @@
 #include <numeric>
 #include <random>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -92,6 +93,23 @@ TEST_CASE( "ska_sorter tests", "[ska_sorter]" )
         cppsort::sort(cppsort::ska_sort, std::begin(vec), std::end(vec));
         CHECK( std::is_sorted(std::begin(vec), std::end(vec)) );
     }
+
+    SECTION( "sort with std::string_view" )
+    {
+        std::vector<std::string> string_vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
+            string_vec.push_back(std::to_string(i));
+        }
+        std::vector<std::string_view> vec(std::begin(string_vec), std::end(string_vec));
+
+        std::shuffle(std::begin(vec), std::end(vec), engine);
+        cppsort::sort(cppsort::ska_sort, vec);
+        CHECK( std::is_sorted(std::begin(vec), std::end(vec)) );
+
+        std::shuffle(std::begin(vec), std::end(vec), engine);
+        cppsort::sort(cppsort::ska_sort, std::begin(vec), std::end(vec));
+        CHECK( std::is_sorted(std::begin(vec), std::end(vec)) );
+    }
 }
 
 namespace
@@ -144,6 +162,9 @@ TEST_CASE( "is_ska_sortable", "[ska_sorter]" )
         CHECK( is_ska_sortable<std::string> );
         CHECK( is_ska_sortable<std::wstring> );
         CHECK( is_ska_sortable<std::basic_string<char16_t>> );
+        CHECK( is_ska_sortable<std::string_view> );
+        CHECK( is_ska_sortable<std::wstring_view> );
+        CHECK( is_ska_sortable<std::basic_string_view<char16_t>> );
 
         // Other collections
         CHECK( is_ska_sortable<std::vector<int>> );

@@ -25,12 +25,27 @@
 #include <functional>
 #include <iterator>
 #include <random>
+#include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 #include <catch.hpp>
 #include <cpp-sort/sorters/spread_sorter.h>
 #include <cpp-sort/sort.h>
 #include "../algorithm.h"
+
+namespace
+{
+    template<typename T>
+    struct wrapper
+    {
+        wrapper(T value):
+            value(std::move(value))
+        {}
+
+        std::string value;
+    };
+}
 
 TEST_CASE( "spread_sorter tests with projections",
            "[spread_sorter][projection]" )
@@ -96,31 +111,53 @@ TEST_CASE( "spread_sorter tests with projections",
 
     SECTION( "sort with std::string iterators" )
     {
-        struct wrapper { std::string value; };
-
-        std::vector<wrapper> vec;
-        for (int i = 0 ; i < 100'000 ; ++i)
-        {
+        std::vector<wrapper<std::string>> vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
             vec.push_back({std::to_string(i)});
         }
         std::shuffle(std::begin(vec), std::end(vec), engine);
-        cppsort::sort(cppsort::spread_sorter{}, vec, &wrapper::value);
+        cppsort::sort(cppsort::spread_sorter{}, vec, &wrapper<std::string>::value);
         CHECK( helpers::is_sorted(std::begin(vec), std::end(vec),
-                                  std::less<>{}, &wrapper::value) );
+                                  std::less<>{}, &wrapper<std::string>::value) );
     }
 
     SECTION( "reverse sort with std::string iterators" )
     {
-        struct wrapper { std::string value; };
-
-        std::vector<wrapper> vec;
-        for (int i = 0 ; i < 100'000 ; ++i)
-        {
+        std::vector<wrapper<std::string>> vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
             vec.push_back({std::to_string(i)});
         }
         std::shuffle(std::begin(vec), std::end(vec), engine);
-        cppsort::sort(cppsort::spread_sorter{}, vec, std::greater<>{}, &wrapper::value);
+        cppsort::sort(cppsort::spread_sorter{}, vec, std::greater<>{}, &wrapper<std::string>::value);
         CHECK( helpers::is_sorted(std::begin(vec), std::end(vec),
-                                  std::greater<>{}, &wrapper::value) );
+                                  std::greater<>{}, &wrapper<std::string>::value) );
+    }
+
+    SECTION( "sort with std::string_view iterators" )
+    {
+        std::vector<std::string> string_vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
+            string_vec.push_back({std::to_string(i)});
+        }
+        std::vector<wrapper<std::string_view>> vec(std::begin(string_vec), std::end(string_vec));
+
+        std::shuffle(std::begin(vec), std::end(vec), engine);
+        cppsort::sort(cppsort::spread_sorter{}, vec, &wrapper<std::string_view>::value);
+        CHECK( helpers::is_sorted(std::begin(vec), std::end(vec),
+                                  std::less<>{}, &wrapper<std::string_view>::value) );
+    }
+
+    SECTION( "reverse sort with std::string_view iterators" )
+    {
+        std::vector<std::string> string_vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
+            string_vec.push_back({std::to_string(i)});
+        }
+        std::vector<wrapper<std::string_view>> vec(std::begin(string_vec), std::end(string_vec));
+
+        std::shuffle(std::begin(vec), std::end(vec), engine);
+        cppsort::sort(cppsort::spread_sorter{}, vec, std::greater<>{}, &wrapper<std::string_view>::value);
+        CHECK( helpers::is_sorted(std::begin(vec), std::end(vec),
+                                  std::greater<>{}, &wrapper<std::string_view>::value) );
     }
 }

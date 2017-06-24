@@ -25,6 +25,8 @@
 #include <iterator>
 #include <random>
 #include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
 #include <catch.hpp>
 #include <cpp-sort/adapters/schwartz_adapter.h>
@@ -38,6 +40,12 @@ namespace
     template<typename T=double>
     struct wrapper
     {
+        wrapper() = default;
+
+        wrapper(T value):
+            value(std::move(value))
+        {}
+
         T value;
     };
 }
@@ -158,6 +166,8 @@ TEST_CASE( "every sorter with Schwartzian transform adapter",
         helpers::iota(std::begin(collection2), std::end(collection2), -125, &wrapper<int>::value);
         std::vector<wrapper<std::string>> collection3;
         for (int i = -125 ; i < 287 ; ++i) { collection3.push_back({std::to_string(i)}); }
+        std::vector<wrapper<std::string_view>> collection4;
+        for (const auto& str: collection3) { collection4.emplace_back(str.value); }
 
         cppsort::sort(sorter{}, collection, &wrapper<>::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
@@ -172,6 +182,11 @@ TEST_CASE( "every sorter with Schwartzian transform adapter",
         cppsort::sort(sorter{}, collection3, &wrapper<std::string>::value);
         CHECK( helpers::is_sorted(std::begin(collection3), std::end(collection3),
                                   std::less<>{}, &wrapper<std::string>::value) );
+
+        std::shuffle(std::begin(collection4), std::end(collection4), engine);
+        cppsort::sort(sorter{}, collection4, &wrapper<std::string_view>::value);
+        CHECK( helpers::is_sorted(std::begin(collection4), std::end(collection4),
+                                  std::less<>{}, &wrapper<std::string_view>::value) );
     }
 
     SECTION( "smooth_sorter" )
@@ -190,6 +205,8 @@ TEST_CASE( "every sorter with Schwartzian transform adapter",
         helpers::iota(std::begin(collection2), std::end(collection2), -125, &wrapper<int>::value);
         std::vector<wrapper<std::string>> collection3;
         for (int i = -125 ; i < 287 ; ++i) { collection3.push_back({std::to_string(i)}); }
+        std::vector<wrapper<std::string_view>> collection4;
+        for (const auto& str: collection3) { collection4.emplace_back(str.value); }
 
         cppsort::sort(sorter{}, collection, &wrapper<>::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
@@ -209,6 +226,16 @@ TEST_CASE( "every sorter with Schwartzian transform adapter",
         cppsort::sort(sorter{}, collection3, std::greater<>{}, &wrapper<std::string>::value);
         CHECK( helpers::is_sorted(std::begin(collection3), std::end(collection3),
                                   std::greater<>{}, &wrapper<std::string>::value) );
+
+        std::shuffle(std::begin(collection4), std::end(collection4), engine);
+        cppsort::sort(sorter{}, collection4, &wrapper<std::string_view>::value);
+        CHECK( helpers::is_sorted(std::begin(collection4), std::end(collection4),
+                                  std::less<>{}, &wrapper<std::string_view>::value) );
+
+        std::shuffle(std::begin(collection4), std::end(collection4), engine);
+        cppsort::sort(sorter{}, collection4, std::greater<>{}, &wrapper<std::string_view>::value);
+        CHECK( helpers::is_sorted(std::begin(collection4), std::end(collection4),
+                                  std::greater<>{}, &wrapper<std::string_view>::value) );
     }
 
     SECTION( "tim_sorter" )

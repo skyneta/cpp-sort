@@ -26,6 +26,7 @@
 #include <numeric>
 #include <random>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <catch.hpp>
 #include <cpp-sort/sorters/spread_sorter.h>
@@ -75,8 +76,7 @@ TEST_CASE( "spread_sorter tests", "[spread_sorter]" )
     SECTION( "sort with std::string" )
     {
         std::vector<std::string> vec;
-        for (int i = 0 ; i < 100'000 ; ++i)
-        {
+        for (int i = 0 ; i < 100'000 ; ++i) {
             vec.push_back(std::to_string(i));
         }
 
@@ -92,8 +92,7 @@ TEST_CASE( "spread_sorter tests", "[spread_sorter]" )
     SECTION( "reverse sort with std::string" )
     {
         std::vector<std::string> vec;
-        for (int i = 0 ; i < 100'000 ; ++i)
-        {
+        for (int i = 0 ; i < 100'000 ; ++i) {
             vec.push_back(std::to_string(i));
         }
 
@@ -104,5 +103,39 @@ TEST_CASE( "spread_sorter tests", "[spread_sorter]" )
         std::shuffle(std::begin(vec), std::end(vec), engine);
         cppsort::sort(cppsort::spread_sorter{}, std::begin(vec), std::end(vec), std::greater<>{});
         CHECK( std::is_sorted(std::begin(vec), std::end(vec), std::greater<>{}) );
+    }
+
+    SECTION( "sort with std::string_view" )
+    {
+        std::vector<std::string> vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
+            vec.push_back(std::to_string(i));
+        }
+        std::vector<std::string_view> view_vec(std::begin(vec), std::end(vec));
+
+        std::shuffle(std::begin(view_vec), std::end(view_vec), engine);
+        cppsort::sort(cppsort::spread_sorter{}, view_vec);
+        CHECK( std::is_sorted(std::begin(view_vec), std::end(view_vec)) );
+
+        std::shuffle(std::begin(view_vec), std::end(view_vec), engine);
+        cppsort::sort(cppsort::spread_sorter{}, std::begin(view_vec), std::end(view_vec));
+        CHECK( std::is_sorted(std::begin(view_vec), std::end(view_vec)) );
+    }
+
+    SECTION( "reverse sort with std::string_view" )
+    {
+        std::vector<std::string> vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
+            vec.push_back(std::to_string(i));
+        }
+        std::vector<std::string_view> view_vec(std::begin(vec), std::end(vec));
+
+        std::shuffle(std::begin(view_vec), std::end(view_vec), engine);
+        cppsort::sort(cppsort::spread_sorter{}, view_vec, std::greater<>{});
+        CHECK( std::is_sorted(std::begin(view_vec), std::end(view_vec), std::greater<>{}) );
+
+        std::shuffle(std::begin(view_vec), std::end(view_vec), engine);
+        cppsort::sort(cppsort::spread_sorter{}, std::begin(view_vec), std::end(view_vec), std::greater<>{});
+        CHECK( std::is_sorted(std::begin(view_vec), std::end(view_vec), std::greater<>{}) );
     }
 }

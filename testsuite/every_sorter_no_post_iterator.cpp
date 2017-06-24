@@ -24,6 +24,8 @@
 #include <algorithm>
 #include <iterator>
 #include <random>
+#include <string>
+#include <string_view>
 #include <vector>
 #include <catch.hpp>
 #include <cpp-sort/sort.h>
@@ -166,6 +168,16 @@ TEST_CASE( "test every sorter with no_post_iterator", "[sorters]" )
 
         cppsort::sort(cppsort::ska_sorter{}, first_str, last_str);
         CHECK( std::is_sorted(std::begin(collection_str), std::end(collection_str)) );
+
+        std::vector<std::string_view> collection_strv(std::begin(collection_str), std::end(collection_str));
+        std::shuffle(std::begin(collection_strv), std::end(collection_strv), engine);
+
+        // Iterators with no post-increment and no post-decrement
+        auto first_strv = make_no_post_iterator(std::begin(collection_strv));
+        auto last_strv = make_no_post_iterator(std::end(collection_strv));
+
+        cppsort::sort(cppsort::ska_sorter{}, first_strv, last_strv);
+        CHECK( std::is_sorted(std::begin(collection_strv), std::end(collection_strv)) );
     }
 
     SECTION( "smooth_sorter" )
@@ -215,6 +227,16 @@ TEST_CASE( "test every sorter with no_post_iterator", "[sorters]" )
 
         cppsort::sort(cppsort::spread_sorter{}, first_str, last_str);
         CHECK( std::is_sorted(std::begin(collection_str), std::end(collection_str)) );
+
+        std::vector<std::string_view> collection_strv(std::begin(collection_str), std::end(collection_str));
+        std::shuffle(std::begin(collection_strv), std::end(collection_strv), engine);
+
+        // Iterators with no post-increment and no post-decrement
+        auto first_strv = make_no_post_iterator(std::begin(collection_strv));
+        auto last_strv = make_no_post_iterator(std::end(collection_strv));
+
+        cppsort::sort(cppsort::spread_sorter{}, first_strv, last_strv);
+        CHECK( std::is_sorted(std::begin(collection_strv), std::end(collection_strv)) );
     }
 
     SECTION( "tim_sorter" )

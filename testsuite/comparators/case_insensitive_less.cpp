@@ -24,6 +24,7 @@
 #include <array>
 #include <locale>
 #include <string>
+#include <string_view>
 #include <catch.hpp>
 #include <cpp-sort/comparators/case_insensitive_less.h>
 #include <cpp-sort/refined.h>
@@ -90,7 +91,50 @@ TEST_CASE( "case-insensitive string comparison with case_insensitive_less" )
         cppsort::sort(array, cppsort::case_insensitive_less(locale));
         CHECK( array == expected );
     }
+}
 
+TEST_CASE( "case-insensitive string_view comparison with case_insensitive_less" )
+{
+    std::array<std::string_view, 9> array = {
+        "awry",
+        "Banana",
+        "greaTEr",
+        "bounTy",
+        "eXpected",
+        "aROma",
+        "excellent",
+        "GreaT",
+        "aROused"
+    };
+
+    std::array<std::string_view, 9> expected = {
+        "aROma",
+        "aROused",
+        "awry",
+        "Banana",
+        "bounTy",
+        "excellent",
+        "eXpected",
+        "GreaT",
+        "greaTEr"
+    };
+
+    SECTION( "implicit global locale" )
+    {
+        cppsort::sort(array, cppsort::case_insensitive_less);
+        CHECK( array == expected );
+    }
+
+    SECTION( "explicit global locale" )
+    {
+        std::locale locale;
+        cppsort::sort(array, cppsort::case_insensitive_less(locale));
+        CHECK( array == expected );
+    }
+}
+
+TEST_CASE( "case-insensitive comparison with customization point" )
+{
     SECTION( "raw less customization point" )
     {
         sub::foo lhs, rhs;
@@ -113,4 +157,3 @@ TEST_CASE( "case-insensitive string comparison with case_insensitive_less" )
         CHECK( res2 == sub::res_t::with_locale );
     }
 }
-

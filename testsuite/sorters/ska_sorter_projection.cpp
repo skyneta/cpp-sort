@@ -25,6 +25,8 @@
 #include <functional>
 #include <iterator>
 #include <random>
+#include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 #include <catch.hpp>
@@ -94,6 +96,29 @@ TEST_CASE( "ska_sorter tests with projections",
         for (int i = 0 ; i < 100'000 ; ++i) {
             vec.push_back({std::to_string(i)});
         }
+        std::shuffle(std::begin(vec), std::end(vec), engine);
+        cppsort::sort(cppsort::ska_sort, vec, &wrapper::value);
+        CHECK( helpers::is_sorted(std::begin(vec), std::end(vec),
+                                  std::less<>{}, &wrapper::value) );
+    }
+
+    SECTION( "sort with std::string_view iterators" )
+    {
+        struct wrapper
+        {
+            wrapper(const std::string& str):
+                value(str)
+            {}
+
+            std::string_view value;
+        };
+
+        std::vector<std::string> string_vec;
+        for (int i = 0 ; i < 100'000 ; ++i) {
+            string_vec.push_back({std::to_string(i)});
+        }
+        std::vector<wrapper> vec(std::begin(string_vec), std::end(string_vec));
+
         std::shuffle(std::begin(vec), std::end(vec), engine);
         cppsort::sort(cppsort::ska_sort, vec, &wrapper::value);
         CHECK( helpers::is_sorted(std::begin(vec), std::end(vec),

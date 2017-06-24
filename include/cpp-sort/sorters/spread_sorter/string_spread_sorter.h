@@ -31,6 +31,7 @@
 #include <functional>
 #include <iterator>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 #include <cpp-sort/sorter_facade.h>
@@ -57,10 +58,10 @@ namespace cppsort
             auto operator()(RandomAccessIterator first, RandomAccessIterator last,
                             Projection projection={}) const
                 -> std::enable_if_t<
-                    std::is_same<
-                        projected_t<RandomAccessIterator, Projection>,
-                        std::string
-                    >::value
+                    std::disjunction_v<
+                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string>,
+                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string_view>
+                    >
                 >
             {
                 unsigned char unused = '\0';
@@ -75,10 +76,9 @@ namespace cppsort
             auto operator()(RandomAccessIterator first, RandomAccessIterator last,
                             Projection projection={}) const
                 -> std::enable_if_t<
-                    std::is_same<
-                        projected_t<RandomAccessIterator, Projection>,
-                        std::wstring
-                    >::value && (sizeof(wchar_t) == 2)
+                    (std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::wstring> ||
+                     std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::wstring_view>)
+                    && (sizeof(wchar_t) == 2)
                 >
             {
                 std::uint16_t unused = 0;
@@ -96,10 +96,10 @@ namespace cppsort
             auto operator()(RandomAccessIterator first, RandomAccessIterator last,
                             std::greater<> compare, Projection projection={}) const
                 -> std::enable_if_t<
-                    std::is_same<
-                        projected_t<RandomAccessIterator, Projection>,
-                        std::string
-                    >::value
+                    std::disjunction_v<
+                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string>,
+                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string_view>
+                    >
                 >
             {
                 unsigned char unused = '\0';
@@ -115,10 +115,9 @@ namespace cppsort
             auto operator()(RandomAccessIterator first, RandomAccessIterator last,
                             std::greater<> compare, Projection projection={}) const
                 -> std::enable_if_t<
-                    std::is_same<
-                        projected_t<RandomAccessIterator, Projection>,
-                        std::wstring
-                    >::value && (sizeof(wchar_t) == 2)
+                    (std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::wstring> ||
+                     std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::wstring_view>)
+                    && (sizeof(wchar_t) == 2)
                 >
             {
                 std::uint16_t unused = 0;
