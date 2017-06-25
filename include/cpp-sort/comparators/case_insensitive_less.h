@@ -206,7 +206,7 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            not utility::is_callable<caller(U, U, std::locale), nope_type>::value,
+                            not utility::is_callable_v<caller(U, U, std::locale), nope_type>,
                             decltype(case_insensitive_less(lhs, rhs, loc))
                         >
                     {
@@ -216,7 +216,7 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            utility::is_callable<caller(U, U, std::locale), nope_type>::value,
+                            utility::is_callable_v<caller(U, U, std::locale), nope_type>,
                             bool
                         >
                     {
