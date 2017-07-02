@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Morwenn
+ * Copyright (c) 2015-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@
 #include <iterator>
 #include <type_traits>
 #include <utility>
-#include <cpp-sort/utility/begin_end.h>
 #include <cpp-sort/utility/detection.h>
 
 namespace cppsort::utility
@@ -57,11 +56,9 @@ namespace cppsort::utility
         typename = std::enable_if_t<not is_detected_v<detail::can_use_std_size_t, Iterable>>
     >
     constexpr auto size(const Iterable& iterable)
-        -> decltype(std::distance(utility::begin(iterable),
-                                  utility::end(iterable)))
+        -> decltype(std::distance(std::begin(iterable), std::end(iterable)))
     {
-        return std::distance(utility::begin(iterable),
-                             utility::end(iterable));
+        return std::distance(std::begin(iterable), std::end(iterable));
     }
 }
 

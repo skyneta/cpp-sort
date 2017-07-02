@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -119,11 +119,30 @@ namespace cppsort::utility
         -> rvalue_reference_t<Iterator>
     {
         using utility::iter_move;
-        return iter_move(it.base());
+        return iter_move(std::prev(it.base()));
     }
 
     template<typename Iterator>
     auto iter_swap(std::reverse_iterator<Iterator> lhs, std::reverse_iterator<Iterator> rhs)
+        -> void
+    {
+        using utility::iter_swap;
+        iter_swap(std::prev(lhs.base()), std::prev(rhs.base()));
+    }
+
+    ////////////////////////////////////////////////////////////
+    // std::move_iterator overloads
+
+    template<typename Iterator>
+    auto iter_move(const std::move_iterator<Iterator>& it)
+        -> rvalue_reference_t<Iterator>
+    {
+        using utility::iter_move;
+        return iter_move(it.base());
+    }
+
+    template<typename Iterator>
+    auto iter_swap(std::move_iterator<Iterator> lhs, std::move_iterator<Iterator> rhs)
         -> void
     {
         using utility::iter_swap;

@@ -33,7 +33,6 @@
 #include <utility>
 #include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
-#include <cpp-sort/utility/begin_end.h>
 #include <cpp-sort/utility/functional.h>
 #include <cpp-sort/utility/size.h>
 #include "../detail/iterator_traits.h"
@@ -63,12 +62,12 @@ namespace cppsort
                 static_assert(
                     std::is_base_of_v<
                         std::forward_iterator_tag,
-                        iterator_category_t<decltype(utility::begin(iterable))>
+                        iterator_category_t<decltype(std::begin(iterable))>
                     >,
                     "quick_sorter requires at least forward iterators"
                 );
 
-                quicksort(utility::begin(iterable), utility::end(iterable),
+                quicksort(std::begin(iterable), std::end(iterable),
                           utility::size(iterable),
                           std::move(compare), std::move(projection));
             }
