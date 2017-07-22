@@ -95,6 +95,7 @@ set(
     utility/as_projection_iterable.cpp
     utility/branchless_traits.cpp
     utility/buffer.cpp
+    utility/function_constant.cpp
     utility/iter_swap.cpp
 )
 

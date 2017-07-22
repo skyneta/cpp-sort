@@ -30,6 +30,7 @@
 #include <cmath>
 #include <type_traits>
 #include <utility>
+#include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/branchless_traits.h>
 
 namespace cppsort::utility
@@ -266,6 +267,44 @@ namespace cppsort::utility
             return sqrt(std::forward<T>(value));
         }
     };
+
+    ////////////////////////////////////////////////////////////
+    // Function constant (micro-optimization)
+
+    template<auto Function>
+    struct function_constant
+    {
+        using value_type = decltype(Function);
+
+        static constexpr value_type value = Function;
+
+        template<typename... Args>
+        constexpr auto operator()(Args&&... args) const
+            noexcept(noexcept(as_function(Function)(std::forward<Args>(args)...)))
+            -> decltype(as_function(Function)(std::forward<Args>(args)...))
+        {
+            return as_function(Function)(std::forward<Args>(args)...);
+        }
+
+        constexpr operator value_type() const noexcept
+        {
+            return Function;
+        }
+    };
+
+    template<auto Function, typename T>
+    struct is_probably_branchless_comparison<function_constant<Function>, T>:
+        is_probably_branchless_comparison<
+            typename function_constant<Function>::value_type, T
+        >
+    {};
+
+    template<auto Function, typename T>
+    struct is_probably_branchless_projection<function_constant<Function>, T>:
+        is_probably_branchless_projection<
+            typename function_constant<Function>::value_type, T
+        >
+    {};
 }
 
 #endif // CPPSORT_UTILITY_FUNCTIONAL_H_
