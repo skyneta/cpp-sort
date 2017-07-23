@@ -68,8 +68,7 @@ namespace cppsort
 
                 // There are specializations for N < 5, so unchecked_minmax_element
                 // will always be passed at least 2 elements
-                RandomAccessIterator min, max;
-                std::tie(min, max) = unchecked_minmax_element(first, last, compare, projection);
+                auto [min, max] = unchecked_minmax_element(first, last, compare, projection);
                 --last;
 
                 if (max == first && min == last) {

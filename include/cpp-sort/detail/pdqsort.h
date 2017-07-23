@@ -505,11 +505,9 @@ namespace cppsort::detail
                 }
 
                 // Partition and get results.
-                std::pair<RandomAccessIterator, bool> part_result = Branchless  ?
+                auto [pivot_pos, already_partitioned] = Branchless ?
                     partition_right_branchless(begin, end, compare, projection) :
                     partition_right(begin, end, compare, projection);
-                RandomAccessIterator pivot_pos = part_result.first;
-                bool already_partitioned = part_result.second;
 
                 // Check for a highly unbalanced partition.
                 difference_type l_size = std::distance(begin, pivot_pos);
