@@ -21,7 +21,7 @@
 #include <utility>
 #include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/as_function.h>
-#include <cpp-sort/utility/detection.h>
+#include "detection.h"
 
 namespace cppsort::detail
 {
@@ -964,11 +964,11 @@ namespace cppsort::detail
         = std::decay_t<decltype(std::declval<T&>()[0])>;
 
     template<template<typename...> typename Op, typename... Args>
-    using is_index_ska_sortable = is_ska_sortable<utility::detected_t<Op, Args...>>;
+    using is_index_ska_sortable = is_ska_sortable<detected_t<Op, Args...>>;
 
     // A bit hackish, but I'm bad at workarounds...
     template<>
-    struct is_ska_sortable<utility::nonesuch>:
+    struct is_ska_sortable<nonesuch>:
         std::false_type
     {};
 

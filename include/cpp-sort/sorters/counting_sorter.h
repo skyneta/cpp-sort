@@ -50,6 +50,14 @@ namespace cppsort
                     std::is_integral_v<value_type_t<ForwardIterator>>
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::forward_iterator_tag,
+                        iterator_category_t<ForwardIterator>
+                    >,
+                    "counting_sorter requires at least forward iterators"
+                );
+
                 counting_sort(std::move(first), std::move(last));
             }
 
@@ -59,6 +67,14 @@ namespace cppsort
                     std::is_integral_v<value_type_t<ForwardIterator>>
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::forward_iterator_tag,
+                        iterator_category_t<ForwardIterator>
+                    >,
+                    "counting_sorter requires at least forward iterators"
+                );
+
                 reverse_counting_sort(std::move(first), std::move(last));
             }
 

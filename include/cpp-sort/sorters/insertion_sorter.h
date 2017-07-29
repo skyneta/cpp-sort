@@ -63,7 +63,7 @@ namespace cppsort
                         std::bidirectional_iterator_tag,
                         iterator_category_t<BidirectionalIterator>
                     >,
-                    "insertion_sorter requires at least forward iterators"
+                    "insertion_sorter requires at least bidirectional iterators"
                 );
 
                 insertion_sort(std::move(first), std::move(last),

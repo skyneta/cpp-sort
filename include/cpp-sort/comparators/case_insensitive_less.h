@@ -32,8 +32,8 @@
 #include <locale>
 #include <type_traits>
 #include <utility>
-#include <cpp-sort/utility/detection.h>
-#include <cpp-sort/utility/is_callable.h>
+#include "../detail/detection.h"
+#include "../detail/is_callable.h"
 
 namespace cppsort
 {
@@ -97,7 +97,7 @@ namespace cppsort
 
         template<typename T>
         constexpr bool can_be_refined_for
-            = utility::is_detected_v<can_be_refined_for_t, T>;
+            = is_detected_v<can_be_refined_for_t, T>;
 
         struct case_insensitive_less_locale_fn
         {
@@ -206,7 +206,7 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            not utility::is_callable_v<caller(U, U, std::locale), nope_type>,
+                            not is_callable_v<caller(U, U, std::locale), nope_type>,
                             decltype(case_insensitive_less(lhs, rhs, loc))
                         >
                     {
@@ -216,7 +216,7 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            utility::is_callable_v<caller(U, U, std::locale), nope_type>,
+                            is_callable_v<caller(U, U, std::locale), nope_type>,
                             bool
                         >
                     {
@@ -246,7 +246,7 @@ namespace cppsort
                     template<typename U=T>
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
-                            std::negation_v<utility::is_callable<caller(U, U), nope_type>>,
+                            std::negation_v<is_callable<caller(U, U), nope_type>>,
                             decltype(case_insensitive_less(lhs, rhs))
                         >
                     {
@@ -257,8 +257,8 @@ namespace cppsort
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
                             std::conjunction_v<
-                                utility::is_callable<caller(U, U), nope_type>,
-                                std::negation<utility::is_callable<caller(U, U, std::locale), nope_type>>
+                                is_callable<caller(U, U), nope_type>,
+                                std::negation<is_callable<caller(U, U, std::locale), nope_type>>
                             >,
                             decltype(case_insensitive_less(lhs, rhs, loc))
                         >
@@ -270,8 +270,8 @@ namespace cppsort
                     auto operator()(const T& lhs, const T& rhs) const
                         -> std::enable_if_t<
                             std::conjunction_v<
-                                utility::is_callable<caller(U, U), nope_type>,
-                                utility::is_callable<caller(U, U, std::locale), nope_type>
+                                is_callable<caller(U, U), nope_type>,
+                                is_callable<caller(U, U, std::locale), nope_type>
                             >,
                             bool
                         >

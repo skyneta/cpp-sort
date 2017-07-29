@@ -62,7 +62,7 @@ namespace cppsort
                 static_assert(
                     std::is_base_of_v<
                         std::random_access_iterator_tag,
-                        typename std::iterator_traits<RandomAccessIterator>::iterator_category
+                        iterator_category_t<RandomAccessIterator>
                     >,
                     "grail_sorter requires at least random-access iterators"
                 );

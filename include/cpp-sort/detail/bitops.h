@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef CPPSORT_UTILITY_BITOPS_H_
-#define CPPSORT_UTILITY_BITOPS_H_
+#ifndef CPPSORT_DETAIL_BITOPS_H_
+#define CPPSORT_DETAIL_BITOPS_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -30,7 +30,7 @@
 #include <cstddef>
 #include <limits>
 
-namespace cppsort::utility
+namespace cppsort::detail
 {
     // Returns 2^ceil(log2(n)), assumes n > 0
     template<typename Unsigned>
@@ -69,4 +69,4 @@ namespace cppsort::utility
     }
 }
 
-#endif // CPPSORT_UTILITY_BITOPS_H_
+#endif // CPPSORT_DETAIL_BITOPS_H_

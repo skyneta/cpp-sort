@@ -64,6 +64,14 @@ namespace cppsort
                     >
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::random_access_iterator_tag,
+                        iterator_category_t<RandomAccessIterator>
+                    >,
+                    "string_spread_sorter requires at least random-access iterators"
+                );
+
                 unsigned char unused = '\0';
                 spreadsort::string_sort(std::move(first), std::move(last),
                                         std::move(projection), unused);
@@ -81,6 +89,14 @@ namespace cppsort
                     && (sizeof(wchar_t) == 2)
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::random_access_iterator_tag,
+                        iterator_category_t<RandomAccessIterator>
+                    >,
+                    "string_spread_sorter requires at least random-access iterators"
+                );
+
                 std::uint16_t unused = 0;
                 spreadsort::string_sort(std::move(first), std::move(last),
                                         std::move(projection), unused);
@@ -102,6 +118,14 @@ namespace cppsort
                     >
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::random_access_iterator_tag,
+                        iterator_category_t<RandomAccessIterator>
+                    >,
+                    "string_spread_sorter requires at least random-access iterators"
+                );
+
                 unsigned char unused = '\0';
                 spreadsort::reverse_string_sort(std::move(first), std::move(last),
                                                 std::move(compare), std::move(projection),
@@ -120,6 +144,14 @@ namespace cppsort
                     && (sizeof(wchar_t) == 2)
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::random_access_iterator_tag,
+                        iterator_category_t<RandomAccessIterator>
+                    >,
+                    "string_spread_sorter requires at least random-access iterators"
+                );
+
                 std::uint16_t unused = 0;
                 spreadsort::reverse_string_sort(std::move(first), std::move(last),
                                                 std::move(compare), std::move(projection),

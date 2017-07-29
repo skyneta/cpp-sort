@@ -32,7 +32,7 @@
 #include <utility>
 #include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/as_function.h>
-#include <cpp-sort/utility/bitops.h>
+#include "bitops.h"
 #include "inplace_merge.h"
 #include "is_sorted_until.h"
 #include "iterator_traits.h"
@@ -59,7 +59,7 @@ namespace cppsort::detail
         }
 
         // Limit under which quicksort is used
-        int unstable_limit = dist / utility::log2(dist);
+        int unstable_limit = dist / log2(dist);
 
         // Beginning of an unstable partition, last if the
         // previous partition is stable
@@ -182,7 +182,7 @@ namespace cppsort::detail
         }
 
         // Limit under which pdqsort is used to sort a sub-sequence
-        const difference_type unstable_limit = dist / utility::log2(dist);
+        const difference_type unstable_limit = dist / log2(dist);
 
         // Vergesort detects big runs in ascending or descending order,
         // and remember where each run ends by storing the end iterator

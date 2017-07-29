@@ -60,6 +60,14 @@ namespace cppsort
                     is_projection_iterator_v<Projection, RandomAccessIterator>
                 >
             {
+                static_assert(
+                    std::is_base_of_v<
+                        std::random_access_iterator_tag,
+                        iterator_category_t<RandomAccessIterator>
+                    >,
+                    "float_spread_sorter requires at least random-access iterators"
+                );
+
                 spreadsort::float_sort(std::move(first), std::move(last), std::move(projection));
             }
 

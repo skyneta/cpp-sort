@@ -30,7 +30,7 @@
 #include <iterator>
 #include <type_traits>
 #include <utility>
-#include <cpp-sort/utility/detection.h>
+#include "../detail/detection.h"
 
 namespace cppsort::utility
 {
@@ -42,7 +42,9 @@ namespace cppsort::utility
 
     template<
         typename Iterable,
-        typename = std::enable_if_t<is_detected_v<detail::can_use_std_size_t, Iterable>>
+        typename = std::enable_if_t<
+            cppsort::detail::is_detected_v<detail::can_use_std_size_t, Iterable>
+        >
     >
     constexpr auto size(const Iterable& iterable)
         noexcept(noexcept(std::size(iterable)))
@@ -53,7 +55,9 @@ namespace cppsort::utility
 
     template<
         typename Iterable,
-        typename = std::enable_if_t<not is_detected_v<detail::can_use_std_size_t, Iterable>>
+        typename = std::enable_if_t<
+            not cppsort::detail::is_detected_v<detail::can_use_std_size_t, Iterable>
+        >
     >
     constexpr auto size(const Iterable& iterable)
         -> decltype(std::distance(std::begin(iterable), std::end(iterable)))

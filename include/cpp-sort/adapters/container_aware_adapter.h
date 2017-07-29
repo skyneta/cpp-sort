@@ -32,7 +32,7 @@
 #include <utility>
 #include <cpp-sort/sort.h>
 #include <cpp-sort/sorter_traits.h>
-#include <cpp-sort/utility/is_callable.h>
+#include "../detail/is_callable.h"
 #include "../detail/projection_compare.h"
 
 namespace cppsort
@@ -74,16 +74,16 @@ namespace cppsort
         template<typename Sorter, typename Iterable>
         struct can_sort:
             std::conjunction<
-                utility::is_callable<adl_despair(Sorter, Iterable&)>,
-                std::negation<utility::is_callable<adl_despair(Sorter, Iterable&), nope_type>>
+                is_callable<adl_despair(Sorter, Iterable&)>,
+                std::negation<is_callable<adl_despair(Sorter, Iterable&), nope_type>>
             >
         {};
 
         template<typename Sorter, typename Iterable, typename Compare>
         struct can_comparison_sort:
             std::conjunction<
-                utility::is_callable<adl_despair(Sorter, Iterable&, Compare)>,
-                std::negation<utility::is_callable<adl_despair(Sorter, Iterable&, Compare), nope_type>>,
+                is_callable<adl_despair(Sorter, Iterable&, Compare)>,
+                std::negation<is_callable<adl_despair(Sorter, Iterable&, Compare), nope_type>>,
                 is_projection<utility::identity, Iterable, Compare>
             >
         {};
@@ -91,8 +91,8 @@ namespace cppsort
         template<typename Sorter, typename Iterable, typename Projection>
         struct can_projection_sort:
             std::conjunction<
-                utility::is_callable<adl_despair(Sorter, Iterable&, Projection)>,
-                std::negation<utility::is_callable<adl_despair(Sorter, Iterable&, Projection), nope_type>>,
+                is_callable<adl_despair(Sorter, Iterable&, Projection)>,
+                std::negation<is_callable<adl_despair(Sorter, Iterable&, Projection), nope_type>>,
                 is_projection<Projection, Iterable>
             >
         {};
@@ -100,8 +100,8 @@ namespace cppsort
         template<typename Sorter, typename Iterable, typename Compare, typename Projection>
         struct can_comparison_projection_sort:
             std::conjunction<
-                utility::is_callable<adl_despair(Sorter, Iterable&, Compare, Projection)>,
-                std::negation<utility::is_callable<adl_despair(Sorter, Iterable&, Compare, Projection), nope_type>>,
+                is_callable<adl_despair(Sorter, Iterable&, Compare, Projection)>,
+                std::negation<is_callable<adl_despair(Sorter, Iterable&, Compare, Projection), nope_type>>,
                 is_projection<Projection, Iterable, Compare>
             >
         {};
