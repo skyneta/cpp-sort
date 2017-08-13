@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -377,16 +377,6 @@ namespace cppsort::detail
         -> difference_type_t<associate_iterator<Iterator>>
     {
         return lhs.base() - rhs.base();
-    }
-
-    ////////////////////////////////////////////////////////////
-    // Construction function
-
-    template<typename Iterator>
-    auto make_associate_iterator(Iterator it)
-        -> associate_iterator<Iterator>
-    {
-        return associate_iterator<Iterator>(std::move(it));
     }
 }
 

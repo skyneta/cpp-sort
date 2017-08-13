@@ -80,7 +80,7 @@ namespace cppsort::detail
         -> std::pair<ForwardIterator, ForwardIterator>
     {
         if (begin == end || std::next(begin) == end) {
-            return std::make_pair(begin, begin);
+            return std::pair(begin, begin);
         }
         return unchecked_minmax_element(std::move(begin), std::move(end),
                                         std::move(compare), std::move(projection));

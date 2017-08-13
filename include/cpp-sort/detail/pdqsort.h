@@ -365,7 +365,7 @@ namespace cppsort::detail
             *begin = iter_move(pivot_pos);
             *pivot_pos = std::move(pivot);
 
-            return std::make_pair(pivot_pos, already_partitioned);
+            return std::pair(pivot_pos, already_partitioned);
         }
 
         // Partitions [begin, end) around pivot *begin using comparison function compare. Elements equal
@@ -417,7 +417,7 @@ namespace cppsort::detail
             *begin = iter_move(pivot_pos);
             *pivot_pos = std::move(pivot);
 
-            return std::make_pair(pivot_pos, already_partitioned);
+            return std::pair(pivot_pos, already_partitioned);
         }
 
         // Similar function to the one above, except elements equal to the pivot are put to the left of

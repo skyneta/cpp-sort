@@ -84,8 +84,8 @@ namespace cppsort
 
                 // Indirectly sort the original sequence
                 Sorter{}(
-                    make_associate_iterator(projected.get()),
-                    make_associate_iterator(projected.get() + size),
+                    associate_iterator(projected.get()),
+                    associate_iterator(projected.get() + size),
                     std::move(compare),
                     [](const auto& value) -> auto& { return value.data; }
                 );

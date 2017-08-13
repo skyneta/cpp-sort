@@ -238,14 +238,14 @@ namespace cppsort
                         Stability,
                         std::false_type,
                         decltype(detail::adl_despair{}(Sorter{}, iterable,
-                                                       detail::make_projection_compare(std::less<>{},
-                                                                                       std::move(projection))))
+                                                       detail::projection_compare(std::less<>{},
+                                                                                  std::move(projection))))
                     >
                 >
             {
                 return detail::adl_despair{}(Sorter{}, iterable,
-                                             detail::make_projection_compare(std::less<>{},
-                                                                             std::move(projection)));
+                                             detail::projection_compare(std::less<>{},
+                                                                        std::move(projection)));
             }
 
             template<
@@ -312,14 +312,14 @@ namespace cppsort
                         Stability,
                         std::false_type,
                         decltype(detail::adl_despair{}(Sorter{}, iterable,
-                                                       detail::make_projection_compare(std::move(compare),
-                                                                                       std::move(projection))))
+                                                       detail::projection_compare(std::move(compare),
+                                                                                  std::move(projection))))
                     >
                 >
             {
                 return detail::adl_despair{}(Sorter{}, iterable,
-                                             detail::make_projection_compare(std::move(compare),
-                                                                             std::move(projection)));
+                                             detail::projection_compare(std::move(compare),
+                                                                        std::move(projection)));
             }
 
             template<

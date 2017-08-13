@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,8 +59,8 @@ namespace cppsort
             // Recursively sort, then merge
             list_merge_sort(left, compare, projection);
             list_merge_sort(collection, compare, projection);
-            collection.merge(std::move(left), make_projection_compare(std::move(compare),
-                                                                      std::move(projection)));
+            collection.merge(std::move(left), projection_compare(std::move(compare),
+                                                                 std::move(projection)));
         }
 
         template<typename Compare, typename Projection,
@@ -80,8 +80,8 @@ namespace cppsort
             // Recursively sort, then merge
             flist_merge_sort(left, size / 2, compare, projection);
             flist_merge_sort(collection, size - size / 2, compare, projection);
-            collection.merge(std::move(left), make_projection_compare(std::move(compare),
-                                                                      std::move(projection)));
+            collection.merge(std::move(left), projection_compare(std::move(compare),
+                                                                 std::move(projection)));
         }
     }
 

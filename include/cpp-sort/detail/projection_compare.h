@@ -71,13 +71,6 @@ namespace cppsort::detail
                                          std::get<1>(data)(std::forward<U>(rhs)));
             }
     };
-
-    template<typename Compare, typename Projection>
-    auto make_projection_compare(Compare compare, Projection projection)
-        -> projection_compare<Compare, Projection>
-    {
-        return { compare, projection };
-    }
 }
 
 #endif // CPPSORT_DETAIL_PROJECTION_COMPARE_H_

@@ -97,13 +97,6 @@ namespace cppsort
                 }
         };
 
-        template<typename Compare, typename Projection=utility::identity>
-        auto make_stable_compare(Compare compare, Projection projection={})
-            -> stable_compare<Compare, Projection>
-        {
-            return { compare, projection };
-        }
-
         ////////////////////////////////////////////////////////////
         // Adapter
 
@@ -147,9 +140,9 @@ namespace cppsort
                 // Sort but takes the index into account to ensure stability
 
                 return Sorter{}(
-                    make_associate_iterator(iterators.get()),
-                    make_associate_iterator(iterators.get() + size),
-                    make_stable_compare(std::move(compare), std::move(projection))
+                    associate_iterator(iterators.get()),
+                    associate_iterator(iterators.get() + size),
+                    stable_compare(std::move(compare), std::move(projection))
                 );
             }
 
