@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2017 Morwenn
+ * Copyright (c) 2017 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,45 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef CPPSORT_DETAIL_BUBBLE_SORT_H_
-#define CPPSORT_DETAIL_BUBBLE_SORT_H_
+#ifndef CPPSORT_DETAIL_MEMCPY_CAST_H_
+#define CPPSORT_DETAIL_MEMCPY_CAST_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include <iterator>
-#include "iterator_traits.h"
-#include "swap_if.h"
+#include <cstring>
+#include <memory>
+#include <type_traits>
 
 namespace cppsort::detail
 {
-    //
-    // This sorting algorithm isn't exposed to users of the
-    // library, it's only intended to be used as a fallback
-    // by other stable algorithms to sort small collections
-    //
-    // These recursive algorithms tend to compute the size
-    // of the collection, so bubble_sort can use it to have
-    // a decreasing bound for forward iterators
-    //
-
-    template<typename ForwardIterator, typename Compare, typename Projection>
-    auto bubble_sort(ForwardIterator first, difference_type_t<ForwardIterator> size,
-                     Compare compare, Projection projection)
-        -> void
+    template<typename To, typename From>
+    auto memcpy_cast(const From& value)
+        -> To
     {
-        if (size < 2) return;
+        static_assert(std::is_trivially_copyable_v<From>);
+        static_assert(std::is_trivially_copyable_v<To>);
+        static_assert(sizeof(From) == sizeof(To));
 
-        while (--size) {
-            ForwardIterator current = first;
-            ForwardIterator next = std::next(current);
-            for (difference_type_t<ForwardIterator> i = 0 ; i < size ; ++i) {
-                iter_swap_if(current, next, compare, projection);
-                ++next;
-                ++current;
-            }
-        }
+        To result;
+        std::memcpy(std::addressof(result),
+                    std::addressof(value),
+                    sizeof(From));
+        return result;
     }
 }
 
-#endif // CPPSORT_DETAIL_BUBBLE_SORT_H_
+#endif // CPPSORT_DETAIL_MEMCPY_CAST_H_

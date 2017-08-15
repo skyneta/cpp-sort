@@ -61,28 +61,40 @@ namespace cppsort::detail
         swap_if(lhs, rhs, std::less{}, utility::identity{});
     }
 
-    template<
-        typename Integer,
-        typename = std::enable_if_t<std::is_integral_v<Integer>>
-    >
+    template<typename Integer>
     auto swap_if(Integer& x, Integer& y, std::less<>, utility::identity)
-        -> void
+        -> std::enable_if_t<std::is_integral_v<Integer>>
     {
         Integer dx = x;
         x = std::min(x, y);
         y ^= dx ^ x;
     }
 
-    template<
-        typename Integer,
-        typename = std::enable_if_t<std::is_integral_v<Integer>>
-    >
+    template<typename Float>
+    auto swap_if(Float& x, Float& y, std::less<>, utility::identity)
+        -> std::enable_if_t<std::is_floating_point_v<Float>>
+    {
+        Float dx = x;
+        x = std::min(x, y);
+        y = std::max(dx, y);
+    }
+
+    template<typename Integer>
     auto swap_if(Integer& x, Integer& y, std::greater<>, utility::identity)
-        -> void
+        -> std::enable_if_t<std::is_integral_v<Integer>>
     {
         Integer dx = x;
         x = std::max(x, y);
         y ^= dx ^ x;
+    }
+
+    template<typename Float>
+    auto swap_if(Float& x, Float& y, std::greater<>, utility::identity)
+        -> std::enable_if_t<std::is_floating_point_v<Float>>
+    {
+        Float dx = x;
+        x = std::max(x, y);
+        y = std::min(dx, y);
     }
 
     ////////////////////////////////////////////////////////////

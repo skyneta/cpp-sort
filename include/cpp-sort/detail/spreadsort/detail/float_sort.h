@@ -22,10 +22,8 @@ Phil Endecott and Frank Gennari
 ////////////////////////////////////////////////////////////
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
 #include <functional>
 #include <limits>
-#include <memory>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -35,29 +33,11 @@ Phil Endecott and Frank Gennari
 #include "constants.h"
 #include "integer_sort.h"
 #include "../../iterator_traits.h"
+#include "../../memcpy_cast.h"
 #include "../../pdqsort.h"
 
 namespace cppsort::detail::spreadsort::detail
 {
-    //Casts a RandomAccessIter to the specified integer type
-    template<typename Cast_type, typename RandomAccessIter, typename Projection>
-    auto cast_float_iter(const RandomAccessIter & floatiter, Projection projection)
-        -> Cast_type
-    {
-      using Data_type = projected_t<RandomAccessIter, Projection>;
-      auto&& proj = utility::as_function(projection);
-
-      //Only cast IEEE floating-point numbers, and only to same-sized integers
-      static_assert(sizeof(Cast_type) == sizeof(Data_type));
-      static_assert(std::numeric_limits<Data_type>::is_iec559);
-      static_assert(std::numeric_limits<Cast_type>::is_integer);
-      Cast_type result;
-      std::memcpy(std::addressof(result),
-                  std::addressof(proj(*floatiter)),
-                  sizeof(Data_type));
-      return result;
-    }
-
     //Specialized swap loops for floating-point casting
     template<typename RandomAccessIter, typename Div_type, typename Projection>
     auto inner_float_swap_loop(RandomAccessIter * bins,
@@ -67,18 +47,19 @@ namespace cppsort::detail::spreadsort::detail
         -> void
     {
       using utility::iter_move;
+      auto&& proj = utility::as_function(projection);
 
       RandomAccessIter * local_bin = bins + ii;
       for (RandomAccessIter current = *local_bin; current < nextbinstart;
           ++current) {
         for (RandomAccessIter * target_bin =
-            (bins + ((cast_float_iter<Div_type>(current, projection) >>
+            (bins + ((memcpy_cast<Div_type>(proj(*current)) >>
                       log_divisor) - div_min));  target_bin != local_bin;
-          target_bin = bins + ((cast_float_iter<Div_type>(current, projection) >> log_divisor)
+          target_bin = bins + ((memcpy_cast<Div_type>(proj(*current)) >> log_divisor)
                             - div_min)) {
           RandomAccessIter b = *target_bin;
           ++(*target_bin);
-          RandomAccessIter * b_bin = bins + ((cast_float_iter<Div_type>(b, projection) >> log_divisor)
+          RandomAccessIter * b_bin = bins + ((memcpy_cast<Div_type>(proj(*b)) >> log_divisor)
                                           - div_min);
           //Three-way swap; if the item to be swapped doesn't belong in the
           //current bin, swap it to where it belongs
@@ -122,11 +103,11 @@ namespace cppsort::detail::spreadsort::detail
     {
       auto&& proj = utility::as_function(projection);
 
-      min = max = cast_float_iter<Cast_type>(current, projection);
+      min = max = memcpy_cast<Cast_type>(proj(*current));
       RandomAccessIter prev = current;
       bool sorted = true;
       while (++current < last) {
-        Cast_type value = cast_float_iter<Cast_type>(current, projection);
+        Cast_type value = memcpy_cast<Cast_type>(proj(*current));
         sorted &= proj(*current) >= proj(*prev);
         prev = current;
         if (max < value)
@@ -150,6 +131,8 @@ namespace cppsort::detail::spreadsort::detail
         first, last, max, min, projection))
         return;
 
+      auto&& proj = utility::as_function(projection);
+
       unsigned log_divisor = get_log_divisor<float_log_mean_bin_size>(
           last - first, rough_log_2_size(Size_type(max - min)));
       Div_type div_min = min >> log_divisor;
@@ -161,8 +144,8 @@ namespace cppsort::detail::spreadsort::detail
 
       //Calculating the size of each bin
       for (RandomAccessIter current = first; current != last;) {
-        bin_sizes[unsigned((cast_float_iter<Div_type>(
-            current, projection) >> log_divisor) - div_min)]++;
+        bin_sizes[unsigned((memcpy_cast<Div_type>(
+            proj(*current)) >> log_divisor) - div_min)]++;
         ++current;
       }
       bins[0] = first;
@@ -214,6 +197,8 @@ namespace cppsort::detail::spreadsort::detail
         first, last, max, min, projection))
         return;
 
+      auto&& proj = utility::as_function(projection);
+
       unsigned log_divisor = get_log_divisor<float_log_mean_bin_size>(
           last - first, rough_log_2_size(Size_type(max - min)));
       Div_type div_min = min >> log_divisor;
@@ -225,8 +210,8 @@ namespace cppsort::detail::spreadsort::detail
 
       //Calculating the size of each bin
       for (RandomAccessIter current = first; current != last;) {
-        bin_sizes[unsigned((cast_float_iter<Div_type>(
-            current, projection) >> log_divisor) - div_min)]++;
+        bin_sizes[unsigned((memcpy_cast<Div_type>(
+            proj(*current)) >> log_divisor) - div_min)]++;
         ++current;
       }
       bins[bin_count - 1] = first;
@@ -276,6 +261,9 @@ namespace cppsort::detail::spreadsort::detail
       if (is_sorted_or_find_extremes<RandomAccessIter, Div_type>(
         first, last, max, min, projection))
         return;
+
+      auto&& proj = utility::as_function(projection);
+
       unsigned log_divisor = get_log_divisor<float_log_mean_bin_size>(
           last - first, rough_log_2_size(Size_type(max - min)));
       Div_type div_min = min >> log_divisor;
@@ -287,8 +275,8 @@ namespace cppsort::detail::spreadsort::detail
 
       //Calculating the size of each bin
       for (RandomAccessIter current = first; current != last;) {
-        bin_sizes[unsigned((cast_float_iter<Div_type>(
-            current, projection) >> log_divisor) - div_min)]++;
+        bin_sizes[unsigned((memcpy_cast<Div_type>(
+            proj(*current)) >> log_divisor) - div_min)]++;
         ++current;
       }
       //The index of the first positive bin

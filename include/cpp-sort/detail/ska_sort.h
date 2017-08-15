@@ -13,7 +13,6 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
 #include <iterator>
 #include <limits>
 #include <tuple>
@@ -22,6 +21,7 @@
 #include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/as_function.h>
 #include "detection.h"
+#include "memcpy_cast.h"
 
 namespace cppsort::detail
 {
@@ -121,8 +121,7 @@ namespace cppsort::detail
     inline auto to_unsigned_or_bool(float f)
         -> std::uint32_t
     {
-        std::uint32_t u;
-        std::memcpy(&u, &f, sizeof f);
+        auto u = memcpy_cast<std::uint32_t>(f);
         std::uint32_t sign_bit = -std::int32_t(u >> 31);
         return u ^ (sign_bit | 0x80000000);
     }
@@ -130,8 +129,7 @@ namespace cppsort::detail
     inline auto to_unsigned_or_bool(double f)
         -> std::uint64_t
     {
-        std::uint64_t u;
-        std::memcpy(&u, &f, sizeof f);
+        auto u = memcpy_cast<std::uint64_t>(f);
         std::uint64_t sign_bit = -std::int64_t(u >> 63);
         return u ^ (sign_bit | 0x8000000000000000);
     }
