@@ -52,52 +52,52 @@ TEST_CASE( "indirect sort with Schwartzian transform",
 
     SECTION( "schwartz_adapter over indirect_adapter" )
     {
-        using sorter = cppsort::schwartz_adapter<
-            cppsort::indirect_adapter<
-                cppsort::selection_sorter
-            >
-        >;
+        constexpr auto sort = cppsort::schwartz_adapter(
+            cppsort::indirect_adapter(
+                cppsort::selection_sort
+            )
+        );
 
-        cppsort::sort(sorter{}, collection, &wrapper::value);
+        cppsort::sort(sort, collection, &wrapper::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, &wrapper::value) );
     }
 
     SECTION( "indirect_adapter over schwartz_adapter" )
     {
-        using sorter = cppsort::indirect_adapter<
-            cppsort::schwartz_adapter<
-                cppsort::selection_sorter
-            >
-        >;
+        constexpr auto sort = cppsort::indirect_adapter(
+            cppsort::schwartz_adapter(
+                cppsort::selection_sort
+            )
+        );
 
-        cppsort::sort(sorter{}, collection, &wrapper::value);
+        cppsort::sort(sort, collection, &wrapper::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, &wrapper::value) );
     }
 
     SECTION( "schwartz_adapter over schwartz_adapter" )
     {
-        using sorter = cppsort::schwartz_adapter<
-            cppsort::schwartz_adapter<
-                cppsort::selection_sorter
-            >
-        >;
+        constexpr auto sort = cppsort::schwartz_adapter(
+            cppsort::schwartz_adapter(
+                cppsort::selection_sort
+            )
+        );
 
-        cppsort::sort(sorter{}, collection, &wrapper::value);
+        cppsort::sort(sort, collection, &wrapper::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, &wrapper::value) );
     }
 
     SECTION( "indirect_adapter over indirect_adapter" )
     {
-        using sorter = cppsort::indirect_adapter<
-            cppsort::indirect_adapter<
-                cppsort::selection_sorter
-            >
-        >;
+        constexpr auto sort = cppsort::indirect_adapter(
+            cppsort::indirect_adapter(
+                cppsort::selection_sort
+            )
+        );
 
-        cppsort::sort(sorter{}, collection, &wrapper::value);
+        cppsort::sort(sort, collection, &wrapper::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, &wrapper::value) );
     }

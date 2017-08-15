@@ -157,13 +157,23 @@ namespace cppsort
     template<typename Sorter>
     struct make_stable:
         sorter_facade<detail::stable_adapter_impl<Sorter>>
-    {};
+    {
+        make_stable() = default;
+
+        // Automatic deduction guide
+        constexpr make_stable(Sorter) noexcept {};
+    };
 
     // Actual sorter
     template<typename Sorter>
     struct stable_adapter:
         detail::check_iterator_category<Sorter>
     {
+        stable_adapter() = default;
+
+        // Automatic deduction guide
+        constexpr stable_adapter(Sorter) noexcept {}
+
         template<
             typename... Args,
             typename = std::enable_if_t<is_stable_v<Sorter(Args...)>>

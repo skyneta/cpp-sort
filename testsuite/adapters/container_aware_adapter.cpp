@@ -59,28 +59,29 @@ TEST_CASE( "basic tests with container_aware_adapter",
     using sorter = cppsort::container_aware_adapter<
         cppsort::merge_sorter
     >;
+    constexpr auto new_sort = cppsort::container_aware_adapter(cppsort::merge_sort);
 
     // Cool list to "sort"
     foobar::cool_list<int> collection;
 
     SECTION( "with comparison" )
     {
-        CHECK( sorter{}(collection, std::greater<>{}) );
-        CHECK( cppsort::sort(sorter{}, collection, std::greater<>{}) );
+        CHECK( new_sort(collection, std::greater<>{}) );
+        CHECK( cppsort::sort(new_sort, collection, std::greater<>{}) );
         CHECK( not cppsort::is_stable<sorter(foobar::cool_list<int>&, std::greater<>)>::value );
     }
 
     SECTION( "with projection" )
     {
-        CHECK( sorter{}(collection, std::negate<>{}) );
-        CHECK( cppsort::sort(sorter{}, collection, std::negate<>{}) );
+        CHECK( new_sort(collection, std::negate<>{}) );
+        CHECK( cppsort::sort(new_sort, collection, std::negate<>{}) );
         CHECK( not cppsort::is_stable<sorter(foobar::cool_list<int>&, std::negate<>)>::value );
     }
 
     SECTION( "with automagic comparison-projection" )
     {
-        CHECK( sorter{}(collection, std::greater<>{}, std::negate<>{}) );
-        CHECK( cppsort::sort(sorter{}, collection, std::greater<>{}, std::negate<>{}) );
+        CHECK( new_sort(collection, std::greater<>{}, std::negate<>{}) );
+        CHECK( cppsort::sort(new_sort, collection, std::greater<>{}, std::negate<>{}) );
         CHECK( not cppsort::is_stable<sorter(foobar::cool_list<int>&, std::greater<>, std::negate<>)>::value );
     }
 

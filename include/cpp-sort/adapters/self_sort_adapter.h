@@ -129,7 +129,12 @@ namespace cppsort
     template<typename Sorter>
     struct self_sort_adapter:
         sorter_facade<detail::self_sort_adapter_impl<Sorter>>
-    {};
+    {
+        self_sort_adapter() = default;
+
+        // Automatic deduction guide
+        constexpr self_sort_adapter(Sorter) noexcept {};
+    };
 
     ////////////////////////////////////////////////////////////
     // is_stable specializations

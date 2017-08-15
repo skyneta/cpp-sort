@@ -82,7 +82,12 @@ namespace cppsort
     template<typename FallbackSorter>
     struct verge_adapter:
         sorter_facade<detail::verge_adapter_impl<FallbackSorter>>
-    {};
+    {
+        verge_adapter() = default;
+
+        // Automatic deduction guide
+        constexpr verge_adapter(FallbackSorter) noexcept {}
+    };
 }
 
 #endif // CPPSORT_ADAPTERS_COUNTING_ADAPTER_H_

@@ -108,7 +108,12 @@ namespace cppsort
     template<typename Sorter>
     struct schwartz_adapter:
         sorter_facade<detail::schwartz_adapter_impl<Sorter>>
-    {};
+    {
+        schwartz_adapter() = default;
+
+        // Automatic deduction guide
+        constexpr schwartz_adapter(Sorter) noexcept {}
+    };
 
     ////////////////////////////////////////////////////////////
     // is_stable specialization

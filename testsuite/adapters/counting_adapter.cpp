@@ -43,9 +43,7 @@ TEST_CASE( "basic counting_adapter tests",
     // Selection sort always makes the same number of comparisons
     // for a given size of arrays, allowing to deterministically
     // check that number of comparisons
-    using sorter = cppsort::counting_adapter<
-        cppsort::selection_sorter
-    >;
+    constexpr auto sort = cppsort::counting_adapter(cppsort::selection_sort);
 
     SECTION( "without projections" )
     {
@@ -55,7 +53,7 @@ TEST_CASE( "basic counting_adapter tests",
         distribution(std::back_inserter(collection), 65, 0);
 
         // Sort and check it's sorted
-        std::size_t res = cppsort::sort(sorter{}, collection);
+        std::size_t res = cppsort::sort(sort, collection);
         CHECK( res == 2080 );
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
@@ -74,7 +72,7 @@ TEST_CASE( "basic counting_adapter tests",
         std::list<wrapper> collection(std::begin(tmp), std::end(tmp));
 
         // Sort and check it's sorted
-        std::size_t res = cppsort::sort(sorter{}, collection, &wrapper::value);
+        std::size_t res = cppsort::sort(sort, collection, &wrapper::value);
         CHECK( res == 3160 );
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, &wrapper::value) );
@@ -84,9 +82,7 @@ TEST_CASE( "basic counting_adapter tests",
 TEST_CASE( "counting_adapter tests with std_sorter",
            "[counting_adapter][std_sorter]" )
 {
-    using sorter = cppsort::counting_adapter<
-        cppsort::std_sorter
-    >;
+    constexpr auto sort = cppsort::counting_adapter(cppsort::std_sort);
 
     SECTION( "without projections" )
     {
@@ -96,7 +92,7 @@ TEST_CASE( "counting_adapter tests with std_sorter",
         distribution(std::back_inserter(collection), 65, 0);
 
         // Sort and check it's sorted
-        cppsort::sort(sorter{}, collection);
+        cppsort::sort(sort, collection);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 }
@@ -104,9 +100,7 @@ TEST_CASE( "counting_adapter tests with std_sorter",
 TEST_CASE( "counting_adapter with span",
            "[counting_adapter][span][selection_sorter]" )
 {
-    using sorter = cppsort::counting_adapter<
-        cppsort::selection_sorter
-    >;
+    constexpr auto sort = cppsort::counting_adapter(cppsort::selection_sort);
 
     SECTION( "without projections" )
     {
@@ -116,7 +110,7 @@ TEST_CASE( "counting_adapter with span",
         distribution(std::back_inserter(collection), 65, 0);
 
         // Sort and check it's sorted
-        std::size_t res = cppsort::sort(sorter{}, make_span(collection));
+        std::size_t res = cppsort::sort(sort, make_span(collection));
         CHECK( res == 2080 );
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
@@ -135,7 +129,7 @@ TEST_CASE( "counting_adapter with span",
         std::list<wrapper> collection(std::begin(tmp), std::end(tmp));
 
         // Sort and check it's sorted
-        std::size_t res = cppsort::sort(sorter{}, make_span(collection), &wrapper::value);
+        std::size_t res = cppsort::sort(sort, make_span(collection), &wrapper::value);
         CHECK( res == 3160 );
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, &wrapper::value) );

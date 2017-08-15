@@ -99,6 +99,9 @@ namespace cppsort
     {
         using detail::container_aware_adapter_base<selection_sorter>::operator();
 
+        container_aware_adapter() = default;
+        constexpr container_aware_adapter(selection_sorter) noexcept {}
+
         ////////////////////////////////////////////////////////////
         // std::list
 

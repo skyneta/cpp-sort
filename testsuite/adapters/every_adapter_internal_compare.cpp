@@ -45,57 +45,49 @@ TEST_CASE( "test most adapters with a pointer to member function comparison",
 
     SECTION( "counting_adapter" )
     {
-        using sorter = cppsort::counting_adapter<
-            cppsort::selection_sorter
-        >;
+        constexpr auto sort = cppsort::counting_adapter(cppsort::selection_sort);
 
         // Sort and check it's sorted
-        std::size_t res = sorter{}(collection, &internal_compare<int>::compare_to);
+        std::size_t res = sort(collection, &internal_compare<int>::compare_to);
         CHECK( res == 2080 );
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 
     SECTION( "hybrid_adapter" )
     {
-        using sorter = cppsort::hybrid_adapter<
-            cppsort::merge_sorter,
-            cppsort::poplar_sorter
-        >;
+        constexpr auto sort = cppsort::hybrid_adapter(
+            cppsort::merge_sort,
+            cppsort::poplar_sort
+        );
 
-        sorter{}(collection, &internal_compare<int>::compare_to);
+        sort(collection, &internal_compare<int>::compare_to);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 
     SECTION( "indirect_adapter" )
     {
-        using sorter = cppsort::indirect_adapter<
-            cppsort::poplar_sorter
-        >;
+        constexpr auto sort = cppsort::indirect_adapter(cppsort::poplar_sort);
 
-        sorter{}(collection, &internal_compare<int>::compare_to);
+        sort(collection, &internal_compare<int>::compare_to);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 
     SECTION( "schwartz_adapter" )
     {
-        using sorter = cppsort::schwartz_adapter<
-            cppsort::poplar_sorter
-        >;
+        constexpr auto sort = cppsort::schwartz_adapter(cppsort::poplar_sort);
 
-        sorter{}(collection, &internal_compare<int>::compare_to, std::negate<>{});
+        sort(collection, &internal_compare<int>::compare_to, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
     }
 
     SECTION( "self_sort_adapter" )
     {
-        using sorter = cppsort::self_sort_adapter<
-            cppsort::poplar_sorter
-        >;
+        constexpr auto sort = cppsort::self_sort_adapter(cppsort::poplar_sort);
 
         std::list<internal_compare<int>> li;
         distribution(std::back_inserter(li), 65, 0);
 
-        sorter{}(collection, &internal_compare<int>::compare_to);
+        sort(collection, &internal_compare<int>::compare_to);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 
@@ -120,11 +112,9 @@ TEST_CASE( "test most adapters with a pointer to member function comparison",
 
     SECTION( "stable_adapter" )
     {
-        using sorter = cppsort::stable_adapter<
-            cppsort::poplar_sorter
-        >;
+        constexpr auto sort = cppsort::stable_adapter(cppsort::poplar_sort);
 
-        sorter{}(collection, &internal_compare<int>::compare_to);
+        sort(collection, &internal_compare<int>::compare_to);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 }

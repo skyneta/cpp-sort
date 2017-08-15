@@ -115,6 +115,9 @@ namespace cppsort
     struct container_aware_adapter<insertion_sorter>:
         detail::container_aware_adapter_base<insertion_sorter>
     {
+        container_aware_adapter() = default;
+        constexpr container_aware_adapter(insertion_sorter) noexcept {}
+
         ////////////////////////////////////////////////////////////
         // std::list
 

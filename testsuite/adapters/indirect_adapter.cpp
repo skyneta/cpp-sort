@@ -43,39 +43,37 @@ TEST_CASE( "basic tests with indirect_adapter",
     // Working shuffled copy
     auto collection = vec;
 
-    using sorter = cppsort::indirect_adapter<
-        cppsort::quick_sorter
-    >;
+    constexpr auto sort = cppsort::indirect_adapter(cppsort::quick_sort);
 
     SECTION( "with comparison" )
     {
-        cppsort::sort(sorter{}, collection, std::greater<>{});
+        cppsort::sort(sort, collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = vec;
-        cppsort::sort(sorter{}, std::begin(collection), std::end(collection), std::greater<>{});
+        cppsort::sort(sort, std::begin(collection), std::end(collection), std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
     }
 
     SECTION( "with projection" )
     {
-        cppsort::sort(sorter{}, collection, std::negate<>{});
+        cppsort::sort(sort, collection, std::negate<>{});
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, std::negate<>{}) );
 
         collection = vec;
-        cppsort::sort(sorter{}, std::begin(collection), std::end(collection), std::negate<>{});
+        cppsort::sort(sort, std::begin(collection), std::end(collection), std::negate<>{});
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, std::negate<>{}) );
     }
 
     SECTION( "with comparison and projection" )
     {
-        cppsort::sort(sorter{}, collection, std::greater<>{}, std::negate<>{});
+        cppsort::sort(sort, collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         collection = vec;
-        cppsort::sort(sorter{}, std::begin(collection), std::end(collection),
+        cppsort::sort(sort, std::begin(collection), std::end(collection),
                       std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
@@ -88,26 +86,24 @@ TEST_CASE( "indirect_adapter with temporary span",
     auto distribution = dist::shuffled{};
     distribution(std::back_inserter(collection), 221, -32);
 
-    using sorter = cppsort::indirect_adapter<
-        cppsort::quick_sorter
-    >;
+    constexpr auto sort = cppsort::indirect_adapter(cppsort::quick_sort);
 
     SECTION( "with comparison" )
     {
-        cppsort::sort(sorter{}, make_span(collection), std::greater<>{});
+        cppsort::sort(sort, make_span(collection), std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
     }
 
     SECTION( "with projection" )
     {
-        cppsort::sort(sorter{}, make_span(collection), std::negate<>{});
+        cppsort::sort(sort, make_span(collection), std::negate<>{});
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::less<>{}, std::negate<>{}) );
     }
 
     SECTION( "with comparison and projection" )
     {
-        cppsort::sort(sorter{}, make_span(collection), std::greater<>{}, std::negate<>{});
+        cppsort::sort(sort, make_span(collection), std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 }

@@ -91,6 +91,9 @@ namespace cppsort
     {
         using detail::container_aware_adapter_base<merge_sorter>::operator();
 
+        container_aware_adapter() = default;
+        constexpr container_aware_adapter(merge_sorter) noexcept {}
+
         ////////////////////////////////////////////////////////////
         // std::list
 

@@ -46,115 +46,109 @@ TEST_CASE( "container_aware_adapter and std::list",
 
     SECTION( "insertion_sorter" )
     {
-        using sorter = cppsort::container_aware_adapter<
-            cppsort::insertion_sorter
-        >;
+        constexpr auto sort = cppsort::container_aware_adapter(cppsort::insertion_sort);
         std::list<double> collection(std::begin(vec), std::end(vec));
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::greater<>{});
+        sort(collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::greater<>{});
+        cppsort::sort(sort, collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::negate<>{});
+        sort(collection, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::negate<>{});
+        cppsort::sort(sort, collection, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::greater<>{}, std::negate<>{});
+        sort(collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::greater<>{}, std::negate<>{});
+        cppsort::sort(sort, collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         // Make sure that the generic overload is also called when needed
 
         auto vec_copy = vec;
-        cppsort::sort(sorter{}, vec_copy);
+        cppsort::sort(sort, vec_copy);
         CHECK( std::is_sorted(std::begin(vec_copy), std::end(vec_copy)) );
     }
 
     SECTION( "merge_sorter" )
     {
-        using sorter = cppsort::container_aware_adapter<
-            cppsort::merge_sorter
-        >;
+        constexpr auto sort = cppsort::container_aware_adapter(cppsort::merge_sort);
         std::list<double> collection(std::begin(vec), std::end(vec));
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::greater<>{});
+        sort(collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::greater<>{});
+        cppsort::sort(sort, collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::negate<>{});
+        sort(collection, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::negate<>{});
+        cppsort::sort(sort, collection, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::greater<>{}, std::negate<>{});
+        sort(collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::greater<>{}, std::negate<>{});
+        cppsort::sort(sort, collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         // Make sure that the generic overload is also called when needed
 
         auto vec_copy = vec;
-        cppsort::sort(sorter{}, vec_copy);
+        cppsort::sort(sort, vec_copy);
         CHECK( std::is_sorted(std::begin(vec_copy), std::end(vec_copy)) );
     }
 
     SECTION( "selection_sorter" )
     {
-        using sorter = cppsort::container_aware_adapter<
-            cppsort::selection_sorter
-        >;
+        constexpr auto sort = cppsort::container_aware_adapter(cppsort::selection_sort);
         std::list<double> collection(std::begin(vec), std::end(vec));
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::greater<>{});
+        sort(collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::greater<>{});
+        cppsort::sort(sort, collection, std::greater<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::negate<>{});
+        sort(collection, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::negate<>{});
+        cppsort::sort(sort, collection, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection), std::greater<>{}) );
 
         collection = { std::begin(vec), std::end(vec) };
-        sorter{}(collection, std::greater<>{}, std::negate<>{});
+        sort(collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         collection = { std::begin(vec), std::end(vec) };
-        cppsort::sort(sorter{}, collection, std::greater<>{}, std::negate<>{});
+        cppsort::sort(sort, collection, std::greater<>{}, std::negate<>{});
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 
         // Make sure that the generic overload is also called when needed
 
         auto vec_copy = vec;
-        cppsort::sort(sorter{}, vec_copy);
+        cppsort::sort(sort, vec_copy);
         CHECK( std::is_sorted(std::begin(vec_copy), std::end(vec_copy)) );
     }
 }

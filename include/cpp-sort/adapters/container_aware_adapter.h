@@ -353,7 +353,12 @@ namespace cppsort
     template<typename Sorter>
     struct container_aware_adapter:
         detail::container_aware_adapter_base<Sorter>
-    {};
+    {
+        container_aware_adapter() = default;
+
+        // Automatic deduction guide
+        constexpr container_aware_adapter(Sorter) noexcept {}
+    };
 
     ////////////////////////////////////////////////////////////
     // is_stable specialization
