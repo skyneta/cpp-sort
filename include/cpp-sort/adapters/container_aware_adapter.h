@@ -357,7 +357,7 @@ namespace cppsort
         container_aware_adapter() = default;
 
         // Automatic deduction guide
-        constexpr container_aware_adapter(Sorter) noexcept {}
+        constexpr explicit container_aware_adapter(Sorter) noexcept {}
     };
 
     ////////////////////////////////////////////////////////////

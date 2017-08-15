@@ -132,7 +132,7 @@ namespace cppsort
         counting_adapter() = default;
 
         // Automatic deduction guide
-        constexpr counting_adapter(ComparisonSorter) noexcept {}
+        constexpr explicit counting_adapter(ComparisonSorter) noexcept {}
     };
 
     ////////////////////////////////////////////////////////////
