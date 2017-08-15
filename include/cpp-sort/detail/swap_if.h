@@ -58,7 +58,7 @@ namespace cppsort::detail
     auto swap_if(T& lhs, T& rhs)
         -> void
     {
-        swap_if(lhs, rhs, std::less<>{}, utility::identity{});
+        swap_if(lhs, rhs, std::less{}, utility::identity{});
     }
 
     template<

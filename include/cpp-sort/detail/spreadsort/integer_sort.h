@@ -15,7 +15,7 @@ Doxygen comments by Paul A. Bristow Jan 2015
 
 */
 
-// Modified in 2015-2016 by Morwenn for inclusion into cpp-sort
+// Modified in 2015-2017 by Morwenn for inclusion into cpp-sort
 
 #ifndef CPPSORT_DETAIL_SPREADSORT_INTEGER_SORT_H_
 #define CPPSORT_DETAIL_SPREADSORT_INTEGER_SORT_H_
@@ -87,7 +87,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
     // Don't sort if it's too small to optimize.
     if (last - first < detail::min_sort_size)
       pdqsort(std::move(first), std::move(last),
-              std::less<>{}, std::move(projection));
+              std::less{}, std::move(projection));
     else
       detail::integer_sort(std::move(first), std::move(last),
                            proj(*first) >> 0, std::move(projection));

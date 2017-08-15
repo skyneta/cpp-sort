@@ -106,7 +106,7 @@ namespace cppsort
         auto operator()(std::list<Args...>& iterable) const
             -> void
         {
-            detail::list_selection_sort(iterable, std::less<>{}, utility::identity{});
+            detail::list_selection_sort(iterable, std::less{}, utility::identity{});
         }
 
         template<typename Compare, typename... Args>
@@ -124,7 +124,7 @@ namespace cppsort
                 is_projection_v<Projection, std::list<Args...>>
             >
         {
-            detail::list_selection_sort(iterable, std::less<>{}, std::move(projection));
+            detail::list_selection_sort(iterable, std::less{}, std::move(projection));
         }
 
         template<
@@ -149,7 +149,7 @@ namespace cppsort
         auto operator()(std::forward_list<Args...>& iterable) const
             -> void
         {
-            detail::flist_selection_sort(iterable, std::less<>{}, utility::identity{});
+            detail::flist_selection_sort(iterable, std::less{}, utility::identity{});
         }
 
         template<typename Compare, typename... Args>
@@ -167,7 +167,7 @@ namespace cppsort
                 is_projection_v<Projection, std::forward_list<Args...>>
             >
         {
-            detail::flist_selection_sort(iterable, std::less<>{}, std::move(projection));
+            detail::flist_selection_sort(iterable, std::less{}, std::move(projection));
         }
 
         template<

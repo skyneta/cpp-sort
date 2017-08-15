@@ -192,7 +192,7 @@ namespace cppsort::detail::spreadsort::detail
         if (count < 2)
           continue;
         if (count < max_count)
-          pdqsort(lastPos, bin_cache[u], std::less<>{}, projection);
+          pdqsort(lastPos, bin_cache[u], std::less{}, projection);
         else
           positive_float_sort_rec<RandomAccessIter, Div_type, Size_type>
             (lastPos, bin_cache[u], bin_cache, cache_end, bin_sizes, projection);
@@ -257,7 +257,7 @@ namespace cppsort::detail::spreadsort::detail
         if (count < 2)
           continue;
         if (count < max_count)
-          pdqsort(lastPos, bin_cache[ii], std::less<>{}, projection);
+          pdqsort(lastPos, bin_cache[ii], std::less{}, projection);
         else
           negative_float_sort_rec<RandomAccessIter, Div_type, Size_type>
             (lastPos, bin_cache[ii], bin_cache, cache_end, bin_sizes, projection);
@@ -343,7 +343,7 @@ namespace cppsort::detail::spreadsort::detail
         if (count < 2)
           continue;
         if (count < max_count)
-          pdqsort(lastPos, bin_cache[ii], std::less<>{}, projection);
+          pdqsort(lastPos, bin_cache[ii], std::less{}, projection);
         //sort negative values using reversed-bin spreadsort
         else
           negative_float_sort_rec<RandomAccessIter, Div_type, Size_type>
@@ -356,7 +356,7 @@ namespace cppsort::detail::spreadsort::detail
         if (count < 2)
           continue;
         if (count < max_count)
-          pdqsort(lastPos, bin_cache[u], std::less<>{}, projection);
+          pdqsort(lastPos, bin_cache[u], std::less{}, projection);
         //sort positive values using normal spreadsort
         else
           positive_float_sort_rec<RandomAccessIter, Div_type, Size_type>

@@ -58,7 +58,7 @@ Some performance plots of runtime vs. n and log(range) are provided:\n
   {
     if (last - first < detail::min_sort_size)
       pdqsort(std::move(first), std::move(last),
-              std::less<>{}, std::move(projection));
+              std::less{}, std::move(projection));
     else
       detail::float_sort(std::move(first), std::move(last),
                          std::move(projection));
