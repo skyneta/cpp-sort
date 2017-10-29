@@ -57,6 +57,27 @@ namespace cppsort::detail
     }
 
     // Returns floor(log2(n)), assumes n > 0
+
+#if defined(__GNUC__) || defined(__clang__)
+    constexpr auto log2(unsigned int n)
+        -> unsigned int
+    {
+        return std::numeric_limits<unsigned int>::digits - __builtin_clz(n) - 1u;
+    }
+
+    constexpr auto log2(unsigned long n)
+        -> unsigned long
+    {
+        return std::numeric_limits<unsigned long>::digits - __builtin_clzl(n) - 1ul;
+    }
+
+    constexpr auto log2(unsigned long long n)
+        -> unsigned long long
+    {
+        return std::numeric_limits<unsigned long long>::digits - __builtin_clzll(n) - 1ull;
+    }
+#endif
+
     template<typename Integer>
     constexpr auto log2(Integer n)
         -> Integer

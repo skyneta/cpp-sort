@@ -35,7 +35,6 @@
 ////////////////////////////////////////////////////////////
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <iterator>
 #include <memory>
 #include <type_traits>
@@ -242,32 +241,27 @@ namespace cppsort::detail
     // inplace_merge for bidirectional iterators
 
     template<typename Predicate>
-    class negate
+    class invert
     {
-    private:
-        Predicate predicate;
-    public:
-        negate() {}
+        private:
 
-        explicit negate(Predicate predicate):
-            predicate(predicate)
-        {}
+            Predicate predicate;
 
-        template<typename T1>
-        auto operator()(const T1& x)
-            -> bool
-        {
-            auto&& pred = utility::as_function(predicate);
-            return not pred(x);
-        }
+        public:
 
-        template<typename T1, typename T2>
-        auto operator()(const T1& x, const T2& y)
-            -> bool
-        {
-            auto&& pred = utility::as_function(predicate);
-            return not pred(x, y);
-        }
+            invert() {}
+
+            explicit invert(Predicate predicate):
+                predicate(predicate)
+            {}
+
+            template<typename T1, typename T2>
+            auto operator()(const T1& x, const T2& y)
+                -> bool
+            {
+                auto&& pred = utility::as_function(predicate);
+                return pred(y, x);
+            }
     };
 
     template<typename Compare, typename BidirectionalIterator,
@@ -300,7 +294,7 @@ namespace cppsort::detail
             half_inplace_merge(rv(p), rv(buff),
                                rbi(middle), rbi(first),
                                rbi(last), len2,
-                               std::not_fn(compare), std::move(projection));
+                               invert<Compare>(compare), std::move(projection));
         }
     }
 
