@@ -1,17 +1,5 @@
 language: cpp
 
-sudo: false
-
-compiler:
-  - clang
-  - gcc
-
-env:
-  - BUILD_TYPE=Debug    VALGRIND=true   SANITIZE='' 
-  - BUILD_TYPE=Debug    VALGRIND=false  SANITIZE=undefined 
-#  - BUILD_TYPE=Debug    VALGRIND=false  SANITIZE=address 
-  - BUILD_TYPE=Release  VALGRIND=false  SANITIZE=''
-
 addons:
   apt:
     sources:
@@ -22,18 +10,91 @@ addons:
       - g++-7
       - valgrind
 
+cache:
+  apt: true
+  ccache: true
+
+matrix:
+  include:
+
+    # Linux clang
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Debug VALGRIND=true SANITIZE='' CMAKE_GENERATOR="Unix Makefiles"
+      compiler: clang
+
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Debug VALGRIND=false SANITIZE=undefined CMAKE_GENERATOR="Unix Makefiles"
+      compiler: clang
+
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Debug VALGRIND=false SANITIZE=address CMAKE_GENERATOR="Unix Makefiles"
+      compiler: clang
+
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Release VALGRIND=false SANITIZE='' CMAKE_GENERATOR="Unix Makefiles"
+      compiler: clang
+
+    # Linux gcc
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Debug VALGRIND=true SANITIZE='' CMAKE_GENERATOR="Unix Makefiles"
+      compiler: gcc
+
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Debug VALGRIND=false SANITIZE=undefined CMAKE_GENERATOR="Unix Makefiles"
+      compiler: gcc
+
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Debug VALGRIND=false SANITIZE=address CMAKE_GENERATOR="Unix Makefiles"
+      compiler: gcc
+
+    - os: linux
+      sudo: false
+      env: BUILD_TYPE=Release VALGRIND=false SANITIZE='' CMAKE_GENERATOR="Unix Makefiles"
+      compiler: gcc
+
+    # OSX clang
+    - os: osx
+      osx_image: xcode8
+      env: BUILD_TYPE=Debug VALGRIND=true SANITIZE='' CMAKE_GENERATOR="Xcode"
+      compiler: clang
+
+    - os: osx
+      osx_image: xcode8
+      env: BUILD_TYPE=Release VALGRIND=false SANITIZE='' CMAKE_GENERATOR="Xcode"
+      compiler: clang
+
+before_install:
+  - if [ `uname` = 'Darwin' ]; then
+        brew update &&
+        brew install ccache valgrind &&
+        export PATH="/usr/local/opt/ccache/libexec:$PATH";
+    fi
+
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-7"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-5.0"; fi
 
-script: 
-  - cmake -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DSANITIZE="${SANITIZE}" .
-  - make
-  - if [ "${VALGRIND}" = "true" ]; then
-      travis_wait 40 valgrind --leak-check=full --track-origins=yes --error-exitcode=1 testsuite/cpp-sort-testsuite --rng-seed $RANDOM;
+script:
+  - cmake -H. -Bbuild
+          -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}"
+          -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
+          -DSANITIZE="${SANITIZE}"
+          -DUSE_VALGRIND=${VALGRIND}
+          -G"${CMAKE_GENERATOR}"
+  - if [ `uname` = 'Darwin' ]; then
+        cmake --build build --config ${BUILD_TYPE} -- -jobs 2;
     else
-      testsuite/cpp-sort-testsuite --rng-seed $RANDOM;
+        cmake --build build --config ${BUILD_TYPE} -- -j2;
     fi
+  - cd build/testsuite
+  - travis_wait ctest -C ${BUILD_TYPE} --output-on-failure
 
 notifications:
   email: false
