@@ -61,12 +61,12 @@ matrix:
 
     # OSX clang
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode9.2
       env: BUILD_TYPE=Debug VALGRIND=true SANITIZE='' CMAKE_GENERATOR="Xcode"
       compiler: clang
 
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode9.2
       env: BUILD_TYPE=Release VALGRIND=false SANITIZE='' CMAKE_GENERATOR="Xcode"
       compiler: clang
 
@@ -94,7 +94,7 @@ script:
         cmake --build build --config ${BUILD_TYPE} -- -j2;
     fi
   - cd build/testsuite
-  - travis_wait ctest -C ${BUILD_TYPE} --output-on-failure
+  - travis_wait 40 ctest -C ${BUILD_TYPE} --output-on-failure
 
 notifications:
   email: false
