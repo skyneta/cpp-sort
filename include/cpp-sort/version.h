@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Morwenn
+ * Copyright (c) 2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#ifndef CPPSORT_DETAIL_ASSUME_H_
-#define CPPSORT_DETAIL_ASSUME_H_
+#ifndef CPPSORT_VERSION_H_
+#define CPPSORT_VERSION_H_
 
-// Assumptions may help the compiler to remove unnecessary code
-// Some parts of the library may be significantly slower if this
-// assumption mechanism isn't supported
+// Semantic versioning macros
 
-#if defined(__GNUC__)
-#   define CPPSORT_ASSUME(expression) do { if (!(expression)) __builtin_unreachable(); } while(0)
-#elif defined(__clang__)
-#   define CPPSORT_ASSUME(expression) __builtin_assume(expression)
-#elif defined(_MSC_VER)
-#   define CPPSORT_ASSUME(expression) __assume(expression)
-#else
-#   define CPPSORT_ASSUME(cond)
-#endif
+#define CPPSORT_VERSION_MAJOR 1
+#define CPPSORT_VERSION_MINOR 1
+#define CPPSORT_VERSION_PATCH 0
 
-#endif // CPPSORT_DETAIL_ASSUME_H_
+#endif // CPPSORT_VERSION_H_

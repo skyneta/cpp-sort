@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017 Morwenn
+ * Copyright (c) 2017-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -84,11 +84,30 @@ TEST_CASE( "test most adapters with a pointer to member function comparison",
     {
         constexpr auto sort = cppsort::self_sort_adapter(cppsort::poplar_sort);
 
+        sort(collection, &internal_compare<int>::compare_to);
+        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
+
         std::list<internal_compare<int>> li;
         distribution(std::back_inserter(li), 65, 0);
 
+        sort(li, &internal_compare<int>::compare_to);
+        CHECK( std::is_sorted(std::begin(li), std::end(li)) );
+    }
+
+    SECTION( "stable_adapter<self_sort_adapter>" )
+    {
+        constexpr auto sort = cppsort::stable_adapter(
+            cppsort::self_sort_adapter(cppsort::poplar_sort)
+        );
+
         sort(collection, &internal_compare<int>::compare_to);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
+
+        std::list<internal_compare<int>> li;
+        distribution(std::back_inserter(li), 65, 0);
+
+        sort(li, &internal_compare<int>::compare_to);
+        CHECK( std::is_sorted(std::begin(li), std::end(li)) );
     }
 
     SECTION( "small_array_adapter" )
@@ -120,11 +139,9 @@ TEST_CASE( "test most adapters with a pointer to member function comparison",
 
     SECTION( "verge_adapter" )
     {
-        using sorter = cppsort::verge_adapter<
-            cppsort::poplar_sorter
-        >;
+        constexpr auto sort = cppsort::verge_adapter(cppsort::poplar_sort);
 
-        sorter{}(collection, &internal_compare<int>::compare_to);
+        sort(collection, &internal_compare<int>::compare_to);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 }

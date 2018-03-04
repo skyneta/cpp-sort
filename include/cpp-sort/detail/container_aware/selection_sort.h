@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@
 #include <type_traits>
 #include <utility>
 #include <cpp-sort/fwd.h>
+#include <cpp-sort/sorter_facade.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/functional.h>
@@ -95,7 +96,8 @@ namespace cppsort
 
     template<>
     struct container_aware_adapter<selection_sorter>:
-        detail::container_aware_adapter_base<selection_sorter>
+        detail::container_aware_adapter_base<selection_sorter>,
+        sorter_facade_fptr<container_aware_adapter<selection_sorter>>
     {
         using detail::container_aware_adapter_base<selection_sorter>::operator();
 

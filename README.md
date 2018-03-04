@@ -1,5 +1,7 @@
+[![Latest Release](https://img.shields.io/badge/release-cpp--sort%2F1.1.0-blue.svg)](https://github.com/Morwenn/cpp-sort/releases)
 [![Build Status](https://travis-ci.org/Morwenn/cpp-sort.svg?branch=master)](https://travis-ci.org/Morwenn/cpp-sort)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
+[![Code Coverage](https://codecov.io/gh/Morwenn/cpp-sort/branch/master/graph/badge.svg)](https://codecov.io/gh/Morwenn/cpp-sort)
 
 > *It would be nice if only one or two of the sorting methods would dominate all of the others,
 > regardless of application or the computer being used. But in fact, each method has its own
@@ -89,6 +91,7 @@ some interesting guarantees (ideas often taken from the Ranges TS):
 * The value types of the collections to be sorted need not be default-constructible
 * The value types of the collections to be sorted need not be copyable (only movable)
 * Stateless sorters can be converted to a function pointer for each overloaded `operator()`
+* Sorters are function objects: they can directly be passed as "overload sets" to other functions
 
 You can read more about all the available tools and find some tutorials about using
 and extending **cpp-sort** in [the wiki](https://github.com/Morwenn/cpp-sort/wiki).

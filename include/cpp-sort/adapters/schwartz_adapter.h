@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@
 #include "../detail/associate_iterator.h"
 #include "../detail/checkers.h"
 #include "../detail/memory.h"
+#include "../detail/remove_cvref.h"
 
 namespace cppsort
 {
@@ -65,7 +66,7 @@ namespace cppsort
                               "stable_adapter<std_sorter> doesn't work with schwartz_adapter");
 
                 auto&& proj = utility::as_function(projection);
-                using proj_t = std::decay_t<decltype(proj(*first))>;
+                using proj_t = remove_cvref_t<decltype(proj(*first))>;
                 using value_t = association<ForwardIterator, proj_t>;
 
                 // Collection of projected elements

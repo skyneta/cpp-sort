@@ -1,5 +1,5 @@
 //          Copyright Malte Skarupke 2016.
-//  Modified in 2017 by Morwenn for inclusion into cpp-sort.
+// Modified in 2017-2018 by Morwenn for inclusion into cpp-sort.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -20,8 +20,10 @@
 #include <utility>
 #include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/as_function.h>
+#include "attributes.h"
 #include "detection.h"
 #include "memcpy_cast.h"
+#include "remove_cvref.h"
 
 namespace cppsort::detail
 {
@@ -478,9 +480,9 @@ namespace cppsort::detail
 
     template<typename CurrentSubKey, typename T>
     struct ListElementSubKey:
-        SubKey<std::decay_t<decltype(std::declval<T>()[0])>>
+        SubKey<remove_cvref_t<decltype(std::declval<T>()[0])>>
     {
-        using base = SubKey<std::decay_t<decltype(std::declval<T>()[0])>>;
+        using base = SubKey<remove_cvref_t<decltype(std::declval<T>()[0])>>;
         using next = ListElementSubKey;
 
         template<typename U>
@@ -959,7 +961,7 @@ namespace cppsort::detail
 
     template<typename T>
     using has_indexing_operator_t
-        = std::decay_t<decltype(std::declval<T&>()[0])>;
+        = remove_cvref_t<decltype(std::declval<T&>()[0])>;
 
     template<template<typename...> typename Op, typename... Args>
     using is_index_ska_sortable = is_ska_sortable<detected_t<Op, Args...>>;

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2017 Morwenn
+ * Copyright (c) 2015-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,10 +58,8 @@ namespace cppsort
             auto operator()(RandomAccessIterator first, RandomAccessIterator last,
                             Projection projection={}) const
                 -> std::enable_if_t<
-                    std::disjunction_v<
-                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string>,
-                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string_view>
-                    >
+                    std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::string> ||
+                    std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::string_view>
                 >
             {
                 static_assert(
@@ -112,10 +110,8 @@ namespace cppsort
             auto operator()(RandomAccessIterator first, RandomAccessIterator last,
                             std::greater<> compare, Projection projection={}) const
                 -> std::enable_if_t<
-                    std::disjunction_v<
-                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string>,
-                        std::is_same<projected_t<RandomAccessIterator, Projection>, std::string_view>
-                    >
+                    std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::string> ||
+                    std::is_same_v<projected_t<RandomAccessIterator, Projection>, std::string_view>
                 >
             {
                 static_assert(

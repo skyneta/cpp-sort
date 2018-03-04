@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,7 @@
 #include "iterator_traits.h"
 #include "memory.h"
 #include "move.h"
+#include "remove_cvref.h"
 #include "swap_if.h"
 #include "swap_ranges.h"
 
@@ -440,7 +441,7 @@ namespace cppsort::detail
         // Number of sub-iterators
         auto full_size = size * first.size();
 
-        using rvalue_reference = std::decay_t<rvalue_reference_t<RandomAccessIterator>>;
+        using rvalue_reference = remove_cvref_t<rvalue_reference_t<RandomAccessIterator>>;
         std::unique_ptr<rvalue_reference, operator_deleter> cache(
             static_cast<rvalue_reference*>(::operator new(full_size * sizeof(rvalue_reference)))
         );
