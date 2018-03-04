@@ -135,6 +135,11 @@ namespace cppsort
         constexpr explicit counting_adapter(ComparisonSorter) noexcept {}
     };
 
+
+    template<typename Sorter>
+    counting_adapter(Sorter)
+        -> counting_adapter<Sorter>;
+
     ////////////////////////////////////////////////////////////
     // is_stable specialization
 
