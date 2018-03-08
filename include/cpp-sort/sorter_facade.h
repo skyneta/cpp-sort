@@ -33,7 +33,6 @@
 #include <cpp-sort/refined.h>
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
-#include "detail/config.h"
 #include "detail/projection_compare.h"
 
 namespace cppsort

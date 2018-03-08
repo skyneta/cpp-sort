@@ -25,27 +25,10 @@
 #define CPPSORT_DETAIL_CONFIG_H_
 
 ////////////////////////////////////////////////////////////
-// Check for __has_* macros
-
-#ifndef __has_include
-#   define __has_include(x) 0
-#endif
+// Check for __has_attribute
 
 #ifndef __has_cpp_attribute
 #   define __has_cpp_attribute(x) 0
-#endif
-
-////////////////////////////////////////////////////////////
-// Check for C++17 features
-
-#ifdef __cpp_constexpr
-#   if __cpp_constexpr >= 201603
-#       define CPPSORT_CONSTEXPR_AFTER_CXX14 constexpr
-#   else
-#       define CPPSORT_CONSTEXPR_AFTER_CXX14
-#   endif
-#else
-#   define CPPSORT_CONSTEXPR_AFTER_CXX14
 #endif
 
 ////////////////////////////////////////////////////////////

@@ -20,7 +20,6 @@
 #include <utility>
 #include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/as_function.h>
-#include "attributes.h"
 #include "detection.h"
 #include "memcpy_cast.h"
 #include "remove_cvref.h"
