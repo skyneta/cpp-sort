@@ -68,7 +68,7 @@ namespace cppsort::detail
     //
 
     template<typename Iterator, typename Projection>
-    using projected_t = remove_cvref_t<std::result_of_t<Projection(decltype(*std::declval<Iterator&>()))>>;
+    using projected_t = remove_cvref_t<std::invoke_result_t<Projection, decltype(*std::declval<Iterator&>())>>;
 }
 
 #endif // CPPSORT_DETAIL_ITERATOR_TRAITS_H_

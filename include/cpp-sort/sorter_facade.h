@@ -50,35 +50,35 @@ namespace cppsort
             // to be valid
 
             template<typename Iterable>
-            using fptr_t = std::result_of_t<Sorter(Iterable&)>(*)(Iterable&);
+            using fptr_t = std::invoke_result_t<Sorter, Iterable&>(*)(Iterable&);
 
             template<typename Iterable>
-            using fptr_rvalue_t = std::result_of_t<Sorter(Iterable&&)>(*)(Iterable&&);
+            using fptr_rvalue_t = std::invoke_result_t<Sorter, Iterable&&>(*)(Iterable&&);
 
             template<typename Iterable, typename Func>
-            using fptr_func_t = std::result_of_t<Sorter(Iterable&, Func)>(*)(Iterable&, Func);
+            using fptr_func_t = std::invoke_result_t<Sorter, Iterable&, Func>(*)(Iterable&, Func);
 
             template<typename Iterable, typename Func>
-            using fptr_rvalue_func_t = std::result_of_t<Sorter(Iterable&&, Func)>(*)(Iterable&&, Func);
+            using fptr_rvalue_func_t = std::invoke_result_t<Sorter, Iterable&&, Func>(*)(Iterable&&, Func);
 
             template<typename Iterable, typename Func1, typename Func2>
             using fptr_func2_t
-                = std::result_of_t<Sorter(Iterable&, Func1, Func2)>(*)(Iterable&, Func1, Func2);
+                = std::invoke_result_t<Sorter, Iterable&, Func1, Func2>(*)(Iterable&, Func1, Func2);
 
             template<typename Iterable, typename Func1, typename Func2>
             using fptr_rvalue_func2_t
-                = std::result_of_t<Sorter(Iterable&&, Func1, Func2)>(*)(Iterable&&, Func1, Func2);
+                = std::invoke_result_t<Sorter, Iterable&&, Func1, Func2>(*)(Iterable&&, Func1, Func2);
 
             template<typename Iterator>
-            using fptr_it_t = std::result_of_t<Sorter(Iterator, Iterator)>(*)(Iterator, Iterator);
+            using fptr_it_t = std::invoke_result_t<Sorter, Iterator, Iterator>(*)(Iterator, Iterator);
 
             template<typename Iterator, typename Func>
             using fptr_func_it_t
-                = std::result_of_t<Sorter(Iterator, Iterator, Func)>(*)(Iterator, Iterator, Func);
+                = std::invoke_result_t<Sorter, Iterator, Iterator, Func>(*)(Iterator, Iterator, Func);
 
             template<typename Iterator, typename Func1, typename Func2>
             using fptr_func2_it_t
-                = std::result_of_t<Sorter(Iterator, Iterator, Func1, Func2)>(*)(Iterator, Iterator, Func1, Func2);
+                = std::invoke_result_t<Sorter, Iterator, Iterator, Func1, Func2>(*)(Iterator, Iterator, Func1, Func2);
 
         public:
 
