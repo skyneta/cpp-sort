@@ -74,8 +74,7 @@ namespace cppsort::probe
 
                 return cppsort::detail::count_inversions<difference_type>(
                     iterators.get(), iterators.get() + size, buffer.get(),
-                    cppsort::detail::indirect_compare<Compare, Projection>(std::move(compare),
-                                                                           std::move(projection))
+                    cppsort::detail::indirect_compare(std::move(compare), std::move(projection))
                 );
             }
         };

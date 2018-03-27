@@ -78,7 +78,7 @@ namespace cppsort
 
                 // Sort the iterators on pointed values
                 Sorter{}(std::begin(iterators), std::end(iterators),
-                         detail::indirect_compare<Compare, Projection>(compare, projection));
+                         detail::indirect_compare(compare, projection));
 
                 ////////////////////////////////////////////////////////////
                 // Move the values according the iterator's positions

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -79,8 +79,7 @@ namespace cppsort::probe
                 // Sort the iterators on pointed values
                 pdq_sorter{}(
                     iterators,
-                    cppsort::detail::indirect_compare<Compare, Projection>(std::move(compare),
-                                                                           std::move(projection))
+                    cppsort::detail::indirect_compare(std::move(compare), std::move(projection))
                 );
 
                 ////////////////////////////////////////////////////////////
