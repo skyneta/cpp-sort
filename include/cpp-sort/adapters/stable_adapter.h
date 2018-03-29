@@ -161,7 +161,7 @@ namespace cppsort
         make_stable() = default;
 
         // Automatic deduction guide
-        constexpr explicit make_stable(Sorter) noexcept {};
+        constexpr explicit make_stable(Sorter) noexcept {}
     };
 
     // Actual sorter

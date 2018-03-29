@@ -32,7 +32,7 @@
 #include <utility>
 #include <cpp-sort/utility/as_function.h>
 #include <cpp-sort/utility/branchless_traits.h>
-#include "../detail/remove_cvref.h"
+#include "../detail/type_traits.h"
 
 namespace cppsort::utility
 {

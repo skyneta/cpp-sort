@@ -33,8 +33,8 @@
 #include <type_traits>
 #include <utility>
 #include <cpp-sort/utility/functional.h>
-#include "detail/detection.h"
 #include "detail/raw_checkers.h"
+#include "detail/type_traits.h"
 
 namespace cppsort
 {

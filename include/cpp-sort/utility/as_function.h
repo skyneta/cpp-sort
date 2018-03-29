@@ -19,7 +19,7 @@
 #include <functional>
 #include <type_traits>
 #include <utility>
-#include "../detail/remove_cvref.h"
+#include "../detail/type_traits.h"
 
 namespace cppsort::utility
 {

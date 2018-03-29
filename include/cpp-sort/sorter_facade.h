@@ -34,6 +34,7 @@
 #include <cpp-sort/sorter_traits.h>
 #include <cpp-sort/utility/functional.h>
 #include "detail/projection_compare.h"
+#include "detail/type_traits.h"
 
 namespace cppsort
 {
