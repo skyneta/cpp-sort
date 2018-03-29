@@ -68,9 +68,9 @@ namespace cppsort::probe
                 // need to compute it as-we-go when we are not using random-access
                 // iterators to avoid making two passes over the sequence, hence a
                 // starting value of 0 in this case
-                auto size = std::is_base_of<std::random_access_iterator_tag,
-                                            cppsort::detail::iterator_category_t<ForwardIterator>
-                            >::value ? std::distance(first, last) : 0;
+                auto size = std::is_base_of_v<std::random_access_iterator_tag,
+                                              cppsort::detail::iterator_category_t<ForwardIterator>
+                            > ? std::distance(first, last) : 0;
 
                 auto&& comp = utility::as_function(compare);
                 auto&& proj = utility::as_function(projection);
@@ -101,9 +101,10 @@ namespace cppsort::probe
                     }
                     ++first;
 
-                    if (not std::is_base_of<std::random_access_iterator_tag,
-                                            cppsort::detail::iterator_category_t<ForwardIterator>
-                        >::value) {
+                    if constexpr (not std::is_base_of_v<
+                        std::random_access_iterator_tag,
+                        cppsort::detail::iterator_category_t<ForwardIterator>
+                    >) {
                         // Compute the size as-we-go if iterators are not random-access
                         ++size;
                     }

@@ -79,7 +79,7 @@ namespace cppsort::detail
                 } else {
                     for (difference_type i = 0 ; i < num_dropped_in_row ; ++i) {
                         --read;
-                        if (not std::is_trivially_copyable<rvalue_reference>::value) {
+                        if constexpr (not std::is_trivially_copyable<rvalue_reference>::value) {
                             // If the value is trivially copyable, then it shouldn't have
                             // been modified by the call to iter_move, and the original
                             // value is still fully where it should be
