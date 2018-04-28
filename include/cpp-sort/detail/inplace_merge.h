@@ -295,7 +295,7 @@ namespace cppsort::detail
             half_inplace_merge(rv(p), rv(buff),
                                rbi(middle), rbi(first),
                                rbi(last), len2,
-                               invert<Compare>(compare), std::move(projection));
+                               invert(compare), std::move(projection));
         }
     }
 

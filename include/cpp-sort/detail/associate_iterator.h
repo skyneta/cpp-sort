@@ -49,9 +49,6 @@ namespace cppsort::detail
     // associated to the additional data
     //
 
-    template<typename Iterator, typename Data>
-    struct association;
-
     template<typename Value, typename Data>
     struct associated_value;
 
