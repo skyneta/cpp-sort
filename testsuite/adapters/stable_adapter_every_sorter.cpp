@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,12 +43,10 @@ namespace
     auto operator<(const wrapper& lhs, const wrapper& rhs)
         -> bool
     {
-        if (lhs.value < rhs.value)
-        {
+        if (lhs.value < rhs.value) {
             return true;
         }
-        if (rhs.value < lhs.value)
-        {
+        if (rhs.value < lhs.value) {
             return false;
         }
         return lhs.order < rhs.order;
@@ -60,15 +58,13 @@ TEST_CASE( "every sorter with stable adapter",
 {
     std::vector<wrapper> collection(412);
     std::size_t count = 0;
-    for (wrapper& wrap: collection)
-    {
+    for (wrapper& wrap: collection) {
         wrap.value = count++ % 17;
     }
     std::mt19937 engine(Catch::rngSeed());
     std::shuffle(std::begin(collection), std::end(collection), engine);
     count = 0;
-    for (wrapper& wrap: collection)
-    {
+    for (wrapper& wrap: collection) {
         wrap.order = count++;
     }
 
@@ -110,6 +106,13 @@ TEST_CASE( "every sorter with stable adapter",
     SECTION( "insertion_sorter" )
     {
         using sorter = cppsort::insertion_sorter;
+        cppsort::stable_sort(sorter{}, collection, &wrapper::value);
+        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
+    }
+
+    SECTION( "mel_sorter" )
+    {
+        using sorter = cppsort::mel_sorter;
         cppsort::stable_sort(sorter{}, collection, &wrapper::value);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
