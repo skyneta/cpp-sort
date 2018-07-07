@@ -77,7 +77,7 @@ TEST_CASE( "test every sorter with no_post_iterator", "[sorters]" )
 
     SECTION( "heap_sorter" )
     {
-        cppsort::sort(cppsort::heap_sorter{}, first, last);
+        cppsort::sort(cppsort::heap_sorter<>{}, first, last);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 

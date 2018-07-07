@@ -102,7 +102,7 @@ TEST_CASE( "every sorter with stable adapter",
 
     SECTION( "heap_sorter" )
     {
-        using sorter = cppsort::heap_sorter;
+        using sorter = cppsort::heap_sorter<>;
         cppsort::stable_sort(sorter{}, collection, &wrapper::value);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }

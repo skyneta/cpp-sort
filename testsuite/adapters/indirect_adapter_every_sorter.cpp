@@ -68,7 +68,7 @@ TEST_CASE( "every sorter with indirect adapter",
 
     SECTION( "heap_sorter" )
     {
-        using sorter = cppsort::indirect_adapter<cppsort::heap_sorter>;
+        using sorter = cppsort::indirect_adapter<cppsort::heap_sorter<>>;
         cppsort::sort(sorter{}, collection);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }

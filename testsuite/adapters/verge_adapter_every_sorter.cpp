@@ -71,7 +71,7 @@ TEST_CASE( "every sorter with verge_adapter", "[verge_adapter]" )
 
     SECTION( "heap_sorter" )
     {
-        using sorter = cppsort::verge_adapter<cppsort::heap_sorter>;
+        using sorter = cppsort::verge_adapter<cppsort::heap_sorter<>>;
         cppsort::sort(sorter{}, collection);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }

@@ -89,7 +89,7 @@ TEST_CASE( "test every sorter with temporary span",
 
     SECTION( "heap_sorter" )
     {
-        cppsort::sort(cppsort::heap_sorter{}, make_span(collection));
+        cppsort::sort(cppsort::heap_sorter<>{}, make_span(collection));
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 

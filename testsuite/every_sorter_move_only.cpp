@@ -72,7 +72,7 @@ TEST_CASE( "test every sorter with move-only types", "[sorters]" )
 
     SECTION( "heap_sorter" )
     {
-        cppsort::sort(cppsort::heap_sorter{}, collection);
+        cppsort::sort(cppsort::heap_sorter<>{}, collection);
         CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
     }
 

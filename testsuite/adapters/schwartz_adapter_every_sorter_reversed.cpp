@@ -88,7 +88,7 @@ TEST_CASE( "every sorter with Schwartzian transform adapter and reverse iterator
 
     SECTION( "heap_sorter" )
     {
-        using sorter = cppsort::schwartz_adapter<cppsort::heap_sorter>;
+        using sorter = cppsort::schwartz_adapter<cppsort::heap_sorter<>>;
         cppsort::sort(sorter{}, std::rbegin(collection), std::rend(collection), &wrapper<>::value);
         CHECK( helpers::is_sorted(std::begin(collection), std::end(collection),
                                   std::greater<>{}, &wrapper<>::value) );
