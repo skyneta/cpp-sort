@@ -47,8 +47,7 @@ namespace cppsort::detail
         while (u != last && h < nkeys) {
             int r = lower_bound(h0, h0 + h, proj(*u), compare.base(), projection) - h0;
             if (r == h || compare(proj(*u), proj(h0[r])) != 0) {
-                detail::rotate(h0, h0 + h, u);
-                h0 = u - h;
+                h0 = detail::rotate(h0, h0 + h, u);
                 detail::rotate(h0 + r, u, std::next(u));
                 ++h;
             }

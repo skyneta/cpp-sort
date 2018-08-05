@@ -27,10 +27,7 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
-#include <cstddef>
 #include <iterator>
-#include <memory>
-#include <type_traits>
 #include <utility>
 #include <cpp-sort/utility/as_function.h>
 #include "bubble_sort.h"
@@ -42,15 +39,12 @@
 
 namespace cppsort::detail
 {
-    // std::unique_ptr to handle memory allocated with
-    // std::get_temporary_buffer
     template<typename T>
-    using buffer_ptr = std::unique_ptr<remove_cvref_t<T>[], temporary_buffer_deleter>;
+    using buffer_ptr = temporary_buffer<remove_cvref_t<T>>;
 
     template<typename ForwardIterator, typename Compare, typename Projection>
     auto merge_sort_impl(ForwardIterator first, difference_type_t<ForwardIterator> size,
                          buffer_ptr<rvalue_reference_t<ForwardIterator>>&& buffer,
-                         std::ptrdiff_t& buff_size,
                          Compare compare, Projection projection)
         -> buffer_ptr<rvalue_reference_t<ForwardIterator>>
     {
@@ -69,13 +63,11 @@ namespace cppsort::detail
 
         // Recursively sort the partitions
         buffer = std::move(merge_sort_impl(
-            first, size_left,
-            std::move(buffer), buff_size,
+            first, size_left, std::move(buffer),
             compare, projection
         ));
         buffer = std::move(merge_sort_impl(
-            middle, size - size_left,
-            std::move(buffer), buff_size,
+            middle, size - size_left, std::move(buffer),
             compare, projection
         ));
 
@@ -90,16 +82,11 @@ namespace cppsort::detail
         }
 
         // Try to increase the memory buffer if it not big enough
-        if (buff_size < size - (size / 2)) {
-            using rvalue_reference = remove_cvref_t<rvalue_reference_t<ForwardIterator>>;
-            auto new_buffer = std::get_temporary_buffer<rvalue_reference>(size - (size / 2));
-            buffer.reset(new_buffer.first);
-            buff_size = new_buffer.second;
-        }
+        buffer.try_grow(size - (size / 2));
 
         // Merge the sorted partitions in-place
         merge_n_adaptative(first, size_left, middle, size - (size / 2),
-                           buffer.get(), buff_size,
+                           buffer.data(), buffer.size(),
                            std::move(compare), std::move(projection));
 
         return std::move(buffer);
@@ -109,7 +96,6 @@ namespace cppsort::detail
     auto merge_sort_impl(BidirectionalIterator first, BidirectionalIterator last,
                          difference_type_t<BidirectionalIterator> size,
                          buffer_ptr<rvalue_reference_t<BidirectionalIterator>>&& buffer,
-                         std::ptrdiff_t& buff_size,
                          Compare compare, Projection projection)
         -> buffer_ptr<rvalue_reference_t<BidirectionalIterator>>
     {
@@ -128,13 +114,11 @@ namespace cppsort::detail
 
         // Recursively sort the partitions
         buffer = std::move(merge_sort_impl(
-            first, middle, size_left,
-            std::move(buffer), buff_size,
+            first, middle, size_left, std::move(buffer),
             compare, projection
         ));
         buffer = std::move(merge_sort_impl(
-            middle, last, size - size_left,
-            std::move(buffer), buff_size,
+            middle, last, size - size_left, std::move(buffer),
             compare, projection
         ));
 
@@ -149,19 +133,13 @@ namespace cppsort::detail
         }
 
         // Try to increase the memory buffer if it not big enough
-        if (buff_size < size_left) {
-            using rvalue_reference = remove_cvref_t<rvalue_reference_t<BidirectionalIterator>>;
-            auto new_buffer = std::get_temporary_buffer<rvalue_reference>(size_left);
-            buffer.reset(new_buffer.first);
-            buff_size = new_buffer.second;
-        }
+        buffer.try_grow(size_left);
 
         // Merge the sorted partitions in-place
-        using comp_ref = std::add_lvalue_reference_t<Compare>;
-        inplace_merge_impl<comp_ref>(std::move(first), std::move(middle), std::move(last),
-                                     compare, std::move(projection),
-                                     size_left, size - (size / 2),
-                                     buffer.get(), buff_size);
+        inplace_merge(std::move(first), std::move(middle), std::move(last),
+                      std::move(compare), std::move(projection),
+                      size_left, size - (size / 2),
+                      buffer.data(), buffer.size());
 
         return std::move(buffer);
     }
@@ -180,9 +158,7 @@ namespace cppsort::detail
         }
 
         buffer_ptr<rvalue_reference_t<ForwardIterator>> buffer(nullptr);
-        std::ptrdiff_t buffer_size = 0;
-        merge_sort_impl(std::move(first), size,
-                        std::move(buffer), buffer_size,
+        merge_sort_impl(std::move(first), size, std::move(buffer),
                         std::move(compare), std::move(projection));
     }
 
@@ -200,9 +176,7 @@ namespace cppsort::detail
         }
 
         buffer_ptr<rvalue_reference_t<BidirectionalIterator>> buffer(nullptr);
-        std::ptrdiff_t buffer_size = 0;
-        merge_sort_impl(std::move(first), std::move(last), size,
-                        std::move(buffer), buffer_size,
+        merge_sort_impl(std::move(first), std::move(last), size, std::move(buffer),
                         std::move(compare), std::move(projection));
     }
 

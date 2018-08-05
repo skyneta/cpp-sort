@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////
 #include <algorithm>
 #include <array>
+#include <climits>
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
@@ -18,9 +19,11 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
-#include <cpp-sort/sorters/pdq_sorter.h>
 #include <cpp-sort/utility/as_function.h>
+#include <cpp-sort/utility/functional.h>
+#include "iterator_traits.h"
 #include "memcpy_cast.h"
+#include "pdqsort.h"
 #include "type_traits.h"
 
 namespace cppsort::detail
@@ -73,7 +76,8 @@ namespace cppsort::detail
     inline auto to_unsigned_or_bool(short i)
         -> unsigned short
     {
-        return static_cast<unsigned short>(i) + static_cast<unsigned short>(1 << (sizeof(short) * 8 - 1));
+        return static_cast<unsigned short>(i)
+             + static_cast<unsigned short>(1 << std::numeric_limits<short>::digits);
     }
 
     inline auto to_unsigned_or_bool(unsigned short i)
@@ -85,7 +89,8 @@ namespace cppsort::detail
     inline auto to_unsigned_or_bool(int i)
         -> unsigned int
     {
-        return static_cast<unsigned int>(i) + static_cast<unsigned int>(1 << (sizeof(int) * 8 - 1));
+        return static_cast<unsigned int>(i)
+             + static_cast<unsigned int>(1 << std::numeric_limits<int>::digits);
     }
 
     inline auto to_unsigned_or_bool(unsigned int i)
@@ -97,7 +102,8 @@ namespace cppsort::detail
     inline auto to_unsigned_or_bool(long l)
         -> unsigned long
     {
-        return static_cast<unsigned long>(l) + static_cast<unsigned long>(1l << (sizeof(long) * 8 - 1));
+        return static_cast<unsigned long>(l)
+             + static_cast<unsigned long>(1l << std::numeric_limits<long>::digits);
     }
 
     inline auto to_unsigned_or_bool(unsigned long l)
@@ -109,7 +115,8 @@ namespace cppsort::detail
     inline auto to_unsigned_or_bool(long long l)
         -> unsigned long long
     {
-        return static_cast<unsigned long long>(l) + static_cast<unsigned long long>(1ll << (sizeof(long long) * 8 - 1));
+        return static_cast<unsigned long long>(l)
+             + static_cast<unsigned long long>(1ll << std::numeric_limits<long long>::digits);
     }
 
     inline auto to_unsigned_or_bool(unsigned long long l)
@@ -117,6 +124,24 @@ namespace cppsort::detail
     {
         return l;
     }
+
+#ifdef __SIZEOF_INT128__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    inline auto to_unsigned_or_bool(__int128 l)
+        -> unsigned long long
+    {
+        return static_cast<unsigned __int128>(l)
+             + static_cast<unsigned __int128>(__int128(1) << (CHAR_BIT * sizeof(__int128) - 1));
+    }
+
+    inline auto to_unsigned_or_bool(unsigned __int128 l)
+        -> unsigned __int128
+    {
+        return l;
+    }
+#pragma GCC diagnostic pop
+#endif
 
     inline auto to_unsigned_or_bool(float f)
         -> std::uint32_t
@@ -244,6 +269,17 @@ namespace cppsort::detail
         using type = std::uint64_t;
     };
 
+#ifdef __SIZEOF_INT128__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    template<>
+    struct UnsignedForSize<16>
+    {
+        using type = unsigned __int128;
+    };
+#pragma GCC diagnostic pop
+#endif
+
     template<typename T>
     struct SubKey;
 
@@ -307,7 +343,11 @@ namespace cppsort::detail
 
     template<typename T>
     struct SubKey:
-        FallbackSubKey<T>
+        conditional_t<
+            is_unsigned<T>::value,
+            SizedSubKey<sizeof(T)>,
+            FallbackSubKey<T>
+        >
     {};
 
     template<>
@@ -326,31 +366,6 @@ namespace cppsort::detail
 
     template<>
     struct SubKey<void>;
-
-    template<>
-    struct SubKey<unsigned char>:
-        SizedSubKey<sizeof(unsigned char)>
-    {};
-
-    template<>
-    struct SubKey<unsigned short>:
-        SizedSubKey<sizeof(unsigned short)>
-    {};
-
-    template<>
-    struct SubKey<unsigned int>:
-        SizedSubKey<sizeof(unsigned int)>
-    {};
-
-    template<>
-    struct SubKey<unsigned long>:
-        SizedSubKey<sizeof(unsigned long)>
-    {};
-
-    template<>
-    struct SubKey<unsigned long long>:
-        SizedSubKey<sizeof(unsigned long long)>
-    {};
 
     template<typename T>
     struct SubKey<T*>:
@@ -516,9 +531,9 @@ namespace cppsort::detail
         -> void
     {
         auto&& proj = utility::as_function(projection);
-        cppsort::pdq_sort(std::move(begin), std::move(end), [&](auto&& l, auto&& r) {
+        pdqsort(std::move(begin), std::move(end), [&](auto&& l, auto&& r) {
             return proj(l) < proj(r);
-        });
+        }, utility::identity{});
     }
 
     template<std::ptrdiff_t StdSortThreshold, typename RandomAccessIterator, typename Projection>
@@ -872,6 +887,16 @@ namespace cppsort::detail
         UnsignedInplaceSorter<StdSortThreshold, AmericanFlagSortThreshold, CurrentSubKey, 8>
     {};
 
+#ifdef __SIZEOF_INT128__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    template<std::ptrdiff_t StdSortThreshold, std::ptrdiff_t AmericanFlagSortThreshold, typename CurrentSubKey>
+    struct InplaceSorter<StdSortThreshold, AmericanFlagSortThreshold, CurrentSubKey, unsigned __int128>:
+        UnsignedInplaceSorter<StdSortThreshold, AmericanFlagSortThreshold, CurrentSubKey, 16>
+    {};
+#pragma GCC diagnostic pop
+#endif
+
     template<std::ptrdiff_t StdSortThreshold, std::ptrdiff_t AmericanFlagSortThreshold,
              typename CurrentSubKey, typename SubKeyType, typename Enable=void>
     struct FallbackInplaceSorter;
@@ -937,7 +962,7 @@ namespace cppsort::detail
                             Projection projection)
         -> void
     {
-        using SubKey = SubKey<decltype(utility::as_function(projection)(*begin))>;
+        using SubKey = SubKey<projected_t<RandomAccessIterator, Projection>>;
         SortStarter<StdSortThreshold, AmericanFlagSortThreshold, SubKey>::sort(begin, end, end - begin,
                                                                                std::move(projection));
     }
@@ -973,7 +998,7 @@ namespace cppsort::detail
     template<typename T>
     struct is_ska_sortable:
         std::disjunction<
-            std::is_integral<T>,
+            is_integral<T>,
             is_index_ska_sortable<has_indexing_operator_t, T>
         >
     {};
