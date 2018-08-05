@@ -30,9 +30,7 @@
 #include <cstddef>
 #include <type_traits>
 
-namespace cppsort
-{
-namespace detail
+namespace cppsort::detail
 {
     ////////////////////////////////////////////////////////////
     // Alternative to std::conditional from C++11
@@ -168,6 +166,6 @@ namespace detail
     using is_unsigned = std::is_unsigned<T>;
 
 #endif
-}}
+}
 
 #endif // CPPSORT_DETAIL_TYPE_TRAITS_H_

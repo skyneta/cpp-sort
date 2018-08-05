@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,7 @@
 #include <string>
 #include <utility>
 
-namespace cppsort
-{
-namespace detail
+namespace cppsort::detail
 {
     template<typename Derived>
     struct three_way_compare_base
@@ -171,6 +169,6 @@ namespace detail
             return {};
         }
     };
-}}
+}
 
 #endif // CPPSORT_DETAIL_THREE_WAY_COMPARE_H_

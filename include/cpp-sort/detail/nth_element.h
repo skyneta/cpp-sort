@@ -22,9 +22,7 @@
 #include "iterator_traits.h"
 #include "selection_sort.h"
 
-namespace cppsort
-{
-namespace detail
+namespace cppsort::detail
 {
     ////////////////////////////////////////////////////////////
     // nth_element for forward iterators with introselect
@@ -299,6 +297,6 @@ namespace detail
                                    std::move(compare), std::move(projection),
                                    category{});
     }
-}}
+}
 
 #endif // CPPSORT_DETAIL_NTH_ELEMENT_H_

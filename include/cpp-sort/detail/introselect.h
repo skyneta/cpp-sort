@@ -40,9 +40,7 @@
 #include "partition.h"
 #include "swap_if.h"
 
-namespace cppsort
-{
-namespace detail
+namespace cppsort::detail
 {
     template<typename ForwardIterator, typename Compare, typename Projection>
     auto small_sort(ForwardIterator first, ForwardIterator,
@@ -338,6 +336,6 @@ namespace detail
         // Return an iterator to the nth element
         return std::next(middle1, nth_pos - size_left);
     }
-}}
+}
 
 #endif // CPPSORT_DETAIL_INTROSELECT_H_

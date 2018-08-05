@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Morwenn
+ * Copyright (c) 2016-2018 Morwenn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,7 @@
 #include <list>
 #include <type_traits>
 
-namespace cppsort
-{
-namespace detail
+namespace cppsort::detail
 {
     // Small helpers to help disambiguate the standard list
     // types in some specific scenarios
@@ -57,6 +55,6 @@ namespace detail
     struct is_std_forward_list<std::forward_list<Args...>>:
         std::true_type
     {};
-}}
+}
 
 #endif // CPPSORT_DETAIL_STD_LIST_TRAITS_H_
