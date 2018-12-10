@@ -91,12 +91,13 @@ matrix:
       after_success:
         - conan remote add bintray https://api.bintray.com/conan/morwenn/cpp-sort
         - conan user -r bintray -p ${CONAN_PASSWORD} morwenn
-        - conan upload --all -r bintray cpp-sort/1.2.0@morwenn/stable
+        - conan upload --all -r bintray cpp-sort/1.3.0@morwenn/stable
 
 before_install:
   - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
         brew update;
         brew install ccache valgrind;
+        brew upgrade cmake;
         export PATH="/usr/local/opt/ccache/libexec:$PATH";
     fi
   - if [[ $TRAVIS_OS_NAME = "linux" && $CXX = "clang++" ]]; then
@@ -121,8 +122,13 @@ script:
     else
         cmake --build build --config ${BUILD_TYPE} -- -j2;
     fi
-  - cd build/testsuite
-  - travis_wait 40 ctest -C ${BUILD_TYPE} --output-on-failure
+  - cd build
+  - if [[ $USE_VALGRIND = true ]]; then
+        travis_wait ctest -T memcheck -C ${BUILD_TYPE} --output-on-failure -j 4;
+        find ./Testing/Temporary -type f -name "MemoryChecker.*.log" -size +1300c | xargs cat;
+    else
+        travis_wait ctest -C ${BUILD_TYPE} --output-on-failure -j 4;
+    fi
 
 after_success:
   - if [[ $ENABLE_COVERAGE = true ]]; then

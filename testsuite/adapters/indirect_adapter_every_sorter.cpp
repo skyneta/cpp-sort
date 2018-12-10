@@ -24,145 +24,40 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <cpp-sort/adapters/indirect_adapter.h>
 #include <cpp-sort/adapters/stable_adapter.h>
 #include <cpp-sort/sort.h>
 #include <cpp-sort/sorters.h>
 #include "../distributions.h"
 
-TEST_CASE( "every sorter with indirect adapter",
-           "[indirect_adapter]" )
+TEMPLATE_TEST_CASE( "every sorter with indirect adapter", "[indirect_adapter]",
+                    cppsort::block_sorter<>,
+                    cppsort::default_sorter,
+                    cppsort::drop_merge_sorter,
+                    cppsort::grail_sorter<>,
+                    cppsort::heap_sorter,
+                    cppsort::insertion_sorter,
+                    cppsort::merge_insertion_sorter,
+                    cppsort::merge_sorter,
+                    cppsort::pdq_sorter,
+                    cppsort::poplar_sorter,
+                    cppsort::quick_merge_sorter,
+                    cppsort::quick_sorter,
+                    cppsort::selection_sorter,
+                    cppsort::ska_sorter,
+                    cppsort::smooth_sorter,
+                    cppsort::spread_sorter,
+                    cppsort::std_sorter,
+                    cppsort::stable_adapter<cppsort::std_sorter>,
+                    cppsort::tim_sorter,
+                    cppsort::verge_sorter )
 {
     std::vector<double> collection; collection.reserve(412);
     auto distribution = dist::shuffled{};
     distribution(std::back_inserter(collection), 412, -125.0);
 
-    SECTION( "block_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::block_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "default_sorter" )
-    {
-        using sorter = cppsort::indirect_adapter<cppsort::default_sorter>;
-        cppsort::sort(sorter{}, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "drop_merge_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::drop_merge_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "grail_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::grail_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "heap_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::heap_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "insertion_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::insertion_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "merge_insertion_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::merge_insertion_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "merge_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::merge_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "pdq_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::pdq_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "poplar_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::poplar_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "quick_merge_sorter" )
-    {
-        using sorter = cppsort::indirect_adapter<cppsort::quick_merge_sorter>;
-        cppsort::sort(sorter{}, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "quick_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::quick_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "selection_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::selection_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "smooth_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::smooth_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "std_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::std_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "stable_adapter<std_sorter>" )
-    {
-        using sorter = cppsort::indirect_adapter<
-            cppsort::stable_adapter<cppsort::std_sorter>
-        >;
-        cppsort::sort(sorter{}, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "tim_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::tim_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
-
-    SECTION( "verge_sorter" )
-    {
-        constexpr auto sort = cppsort::indirect_adapter(cppsort::verge_sort);
-        cppsort::sort(sort, collection);
-        CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
-    }
+    constexpr auto sort = cppsort::indirect_adapter(TestType{});
+    cppsort::sort(sort, collection);
+    CHECK( std::is_sorted(std::begin(collection), std::end(collection)) );
 }
