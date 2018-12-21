@@ -24,17 +24,13 @@
 #ifndef CPPSORT_DETAIL_SCOPE_EXIT_H_
 #define CPPSORT_DETAIL_SCOPE_EXIT_H_
 
-#ifdef __cpp_lib_uncaught_exceptions
-
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 #include <exception>
 #include <type_traits>
 
-namespace cppsort
-{
-namespace detail
+namespace cppsort::detail
 {
     template<typename EF>
     struct scope_success
@@ -80,13 +76,8 @@ namespace detail
     };
 
     template<typename EF>
-    auto make_scope_success(EF&& function)
-        -> scope_success<EF>
-    {
-        return scope_success<EF>(std::forward<EF>(function));
-    }
-}}
-
-#endif // __cpp_lib_uncaught_exceptions
+    scope_success(EF)
+        -> scope_success<EF>;
+}
 
 #endif // CPPSORT_DETAIL_SCOPE_EXIT_H_

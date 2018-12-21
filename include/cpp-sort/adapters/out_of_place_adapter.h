@@ -68,21 +68,14 @@ namespace cppsort
                 ++d;
             }
 
-#ifdef __cpp_lib_uncaught_exceptions
             // Work around the sorters that return void
-            auto exit_function = make_scope_success([&] {
+            auto exit_function = scope_success([&] {
                 // Copy the sorted elements back in the original collection
                 std::move(buffer.get(), buffer.get() + size, first);
             });
 
             // Sort the elements in the memory buffer
             return sorter(buffer.get(), buffer.get() + size, std::forward<Args>(args)...);
-#else
-            // Sort the elements in the memory buffer
-            sorter(buffer.get(), buffer.get() + size, std::forward<Args>(args)...);
-            // Copy the sorted elements back in the original collection
-            std::move(buffer.get(), buffer.get() + size, first);
-#endif
         }
     }
 

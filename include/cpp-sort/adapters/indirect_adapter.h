@@ -76,14 +76,9 @@ namespace cppsort
                     iterators.push_back(it);
                 }
 
-#ifndef __cpp_lib_uncaught_exceptions
-                // Sort the iterators on pointed values
-                Sorter{}(std::begin(iterators), std::end(iterators), std::move(compare),
-                         [&proj](RandomAccessIterator it) -> decltype(auto) { return proj(*it); });
-#else
                 // Work around the sorters that return void
-                auto exit_function = make_scope_success([&] {
-#endif
+                auto exit_function = scope_success([&] {
+
                     ////////////////////////////////////////////////////////////
                     // Move the values according the iterator's positions
 
@@ -118,7 +113,6 @@ namespace cppsort
                         } while (start != last && sorted[start - first]);
 
                     }
-#ifdef __cpp_lib_uncaught_exceptions
                 });
 
                 if (first == last || std::next(first) == last) {
@@ -127,7 +121,6 @@ namespace cppsort
 
                 return Sorter{}(std::begin(iterators), std::end(iterators), std::move(compare),
                                 [&proj](RandomAccessIterator it) -> decltype(auto) { return proj(*it); });
-#endif
             }
 
             ////////////////////////////////////////////////////////////
