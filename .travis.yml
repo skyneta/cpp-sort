@@ -118,11 +118,7 @@ script:
           -DUSE_VALGRIND=${USE_VALGRIND}
           -DENABLE_COVERAGE=${ENABLE_COVERAGE}
           -G"${CMAKE_GENERATOR}"
-  - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
-        cmake --build build --config ${BUILD_TYPE} -- -jobs 2;
-    else
-        cmake --build build --config ${BUILD_TYPE} -- -j2;
-    fi
+  - cmake --build build --config ${BUILD_TYPE} -j 2
   - cd build
   - if [[ $USE_VALGRIND = true ]]; then
         travis_wait ctest -T memcheck -C ${BUILD_TYPE} --output-on-failure -j 4;
