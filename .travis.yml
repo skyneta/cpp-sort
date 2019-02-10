@@ -11,6 +11,9 @@ _apt: &apt-common
 
 cache:
   ccache: true
+  directories:
+    - build
+    - .mtime_cache
 
 matrix:
   include:
@@ -168,6 +171,7 @@ before_install:
     fi
 
 install:
+  - gem install mtime_cache
   - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
         export PATH="/usr/local/opt/ccache/libexec:$PATH";
     fi
@@ -175,6 +179,7 @@ install:
   - if [[ $CXX = "clang++" ]]; then export CXX="clang++-3.8"; fi
 
 script:
+  - mtime_cache testsuite/**/*.{%{cpp}} -c .mtime_cache/cache.json
   - cmake -H. -Bbuild
           -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}"
           -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
